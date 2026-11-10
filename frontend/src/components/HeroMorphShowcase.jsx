@@ -1,21 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import * as THREE from "three";
+import React, { useState, useEffect } from "react";
 
 export default function HeroMorphShowcase() {
-  const mountRef = useRef(null);
   const [activeScene, setActiveScene] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   // Scene configuration
   const scenes = [
-    { id: "credit-card", name: "Credit Card" },
+    { id: "credit-card", name: "PayPal Verified Card" },
     { id: "ai-bot", name: "AUTONEX AI Bot" },
     { id: "paypal-verified", name: "PayPal Verified" },
     { id: "pin-verified", name: "PIN Verified" },
-    { id: "zero-trust", name: "Zero-Trust AI" }
+    { id: "speed-ai", name: "High-Speed AI" }
   ];
 
-  // Auto-advance scenes every 4 seconds unless hovered/paused
+  // Auto-advance scenes every 4.2 seconds unless hovered/paused
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
@@ -23,146 +21,6 @@ export default function HeroMorphShowcase() {
     }, 4200);
     return () => clearInterval(interval);
   }, [isPaused, scenes.length]);
-
-  // Three.js Continuous Organic 3D Morphing Purple Blob
-  useEffect(() => {
-    const container = mountRef.current;
-    if (!container) return;
-
-    // Check prefers-reduced-motion
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const width = container.clientWidth || 480;
-    const height = container.clientHeight || 480;
-
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference: "high-performance"
-    });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-    renderer.shadowMap.enabled = false;
-    container.appendChild(renderer.domElement);
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = 6.4;
-
-    // Rich Lavender & Violet Studio Lighting
-    const ambientLight = new THREE.AmbientLight(0xfdf8ff, 1.4);
-    scene.add(ambientLight);
-
-    const keyLight = new THREE.DirectionalLight(0x9d7ce8, 2.6);
-    keyLight.position.set(4, 5, 4);
-    scene.add(keyLight);
-
-    const fillLight = new THREE.DirectionalLight(0xf4d5d9, 1.8);
-    fillLight.position.set(-4, -3, 2);
-    scene.add(fillLight);
-
-    const rimLight = new THREE.DirectionalLight(0xa78bfa, 2.8);
-    rimLight.position.set(0, -4, -3);
-    scene.add(rimLight);
-
-    // Organic 3D Morphing Mesh using Icosahedron with vertex displacement (properly scaled to prevent canvas edge clipping)
-    const baseRadius = 1.18;
-    const geometry = new THREE.IcosahedronGeometry(baseRadius, 5); // Smooth high-res topology
-    const posAttr = geometry.attributes.position;
-    const vertexCount = posAttr.count;
-
-    // Cache original normalized sphere coordinates
-    const originalNormals = [];
-    for (let i = 0; i < vertexCount; i++) {
-      const v = new THREE.Vector3(
-        posAttr.getX(i),
-        posAttr.getY(i),
-        posAttr.getZ(i)
-      ).normalize();
-      originalNormals.push(v);
-    }
-
-    // Translucent Physical Material for luxury depth & reflections
-    const material = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#7663A8"),
-      emissive: new THREE.Color("#2E1A47"),
-      emissiveIntensity: 0.15,
-      roughness: 0.22,
-      metalness: 0.12,
-      clearcoat: 0.85,
-      clearcoatRoughness: 0.14,
-      transmission: 0.42,
-      opacity: 0.88,
-      transparent: true,
-      ior: 1.45,
-      reflectivity: 0.5
-    });
-
-    const morphBlob = new THREE.Mesh(geometry, material);
-    scene.add(morphBlob);
-
-    let animId = null;
-    const clock = new THREE.Clock();
-
-    const animate = () => {
-      const t = prefersReducedMotion ? 0 : clock.getElapsedTime() * 0.75;
-
-      // Continuously transform boundary between organic fluid shapes
-      for (let i = 0; i < vertexCount; i++) {
-        const norm = originalNormals[i];
-        const nx = norm.x;
-        const ny = norm.y;
-        const nz = norm.z;
-
-        // Multi-harmonic 3D displacement waves creating organic blob deformations
-        const wave1 = Math.sin(nx * 1.8 + t) * Math.cos(ny * 1.8 + t * 0.85) * Math.sin(nz * 1.8 + t * 1.1);
-        const wave2 = Math.sin(nx * 3.4 - t * 1.25) * Math.sin(ny * 3.4 + t * 0.95) * 0.32;
-        const wave3 = Math.cos((nx + ny + nz) * 2.2 + t * 0.6) * 0.22;
-
-        const displacement = (wave1 + wave2 + wave3) * 0.22;
-        const currentRadius = baseRadius * (1 + displacement);
-
-        posAttr.setXYZ(i, nx * currentRadius, ny * currentRadius, nz * currentRadius);
-      }
-
-      posAttr.needsUpdate = true;
-      geometry.computeVertexNormals();
-
-      // Subtle floating movement centered inside viewport
-      morphBlob.position.y = Math.sin(t * 0.7) * 0.04;
-      morphBlob.rotation.y = t * 0.14;
-      morphBlob.rotation.z = Math.sin(t * 0.4) * 0.05;
-
-      renderer.render(scene, camera);
-      animId = requestAnimationFrame(animate);
-    };
-
-    animId = requestAnimationFrame(animate);
-
-    const handleResize = () => {
-      if (!container) return;
-      const w = container.clientWidth || 480;
-      const h = container.clientHeight || 480;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (animId) cancelAnimationFrame(animId);
-      if (renderer.domElement && renderer.domElement.parentNode) {
-        renderer.domElement.parentNode.removeChild(renderer.domElement);
-      }
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
-    };
-  }, []);
 
   return (
     <div
@@ -173,7 +31,7 @@ export default function HeroMorphShowcase() {
         position: "relative",
         width: "100%",
         maxWidth: "540px",
-        height: "500px",
+        height: "460px",
         margin: "0 auto",
         display: "flex",
         alignItems: "center",
@@ -182,41 +40,24 @@ export default function HeroMorphShowcase() {
         overflow: "visible"
       }}
     >
-      {/* Ambient Pulsing Purple Glow Aura */}
+      {/* Clean Subtle Ambient Lighting (No distorted jelly blobs) */}
       <div
-        className="hero-morph-glow-aura"
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "440px",
-          height: "440px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle at 45% 45%, rgba(167, 139, 250, 0.42) 0%, rgba(118, 99, 168, 0.22) 50%, rgba(91, 75, 138, 0) 75%)",
-          filter: "blur(28px)",
+          width: "420px",
+          height: "360px",
+          borderRadius: "32px",
+          background: "radial-gradient(ellipse at center, rgba(167, 139, 250, 0.12) 0%, rgba(91, 75, 138, 0.04) 55%, transparent 75%)",
+          filter: "blur(20px)",
           pointerEvents: "none",
-          zIndex: 1,
-          animation: "auraBreathe 5s ease-in-out infinite"
+          zIndex: 1
         }}
       />
 
-      {/* Three.js Morphing Blob Canvas */}
-      <div
-        ref={mountRef}
-        className="hero-morph-canvas-wrapper"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 2,
-          pointerEvents: "none"
-        }}
-      />
-
-      {/* Sequential Animated Visual Showcase (Layered Seamlessly Inside the Shape) */}
+      {/* Sequential Animated Visual Showcase */}
       <div
         className="hero-showcase-viewport"
         style={{
@@ -231,18 +72,18 @@ export default function HeroMorphShowcase() {
         }}
       >
         {/* ========================================================================= */}
-        {/* SCENE 1: LUXURY FLOATING CREDIT CARD                                     */}
+        {/* SCENE 1: PAYPAL VERIFIED CREDIT CARD                                     */}
         {/* ========================================================================= */}
         <div
           className={`showcase-scene scene-credit-card ${activeScene === 0 ? "active" : ""}`}
           style={{
             position: "absolute",
             width: "320px",
-            height: "192px",
+            height: "194px",
             borderRadius: "20px",
-            background: "linear-gradient(135deg, rgba(36, 31, 58, 0.94) 0%, rgba(22, 17, 38, 0.96) 100%)",
-            border: "1.5px solid rgba(205, 189, 235, 0.55)",
-            boxShadow: "0 22px 50px rgba(18, 14, 30, 0.65), 0 0 30px rgba(167, 139, 250, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.12)",
+            background: "linear-gradient(135deg, rgba(24, 20, 42, 0.96) 0%, rgba(13, 10, 26, 0.98) 100%)",
+            border: "1.5px solid rgba(0, 121, 193, 0.55)",
+            boxShadow: "0 22px 50px rgba(18, 14, 30, 0.65), 0 0 30px rgba(0, 121, 193, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.08)",
             padding: "20px 24px",
             display: "flex",
             flexDirection: "column",
@@ -270,7 +111,7 @@ export default function HeroMorphShowcase() {
             }}
           />
 
-          {/* Top Row: EMV Chip + Contactless + Brand */}
+          {/* Top Row: EMV Chip + Contactless + Official PayPal Verified Badge */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               {/* Gold EMV Chip */}
@@ -289,34 +130,48 @@ export default function HeroMorphShowcase() {
                 <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "1px", background: "rgba(0,0,0,0.25)" }} />
               </div>
               {/* Contactless Waves SVG */}
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CDBDEB" strokeWidth="2.2" strokeLinecap="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BAE6FD" strokeWidth="2.2" strokeLinecap="round">
                 <path d="M12 4a12 12 0 0 1 0 16" />
                 <path d="M8 8a7 7 0 0 1 0 8" />
               </svg>
             </div>
-            <div style={{ textAlign: "right" }}>
-              <span style={{ fontSize: "0.78rem", fontWeight: 800, letterSpacing: "0.08em", color: "#F5F0FF", fontFamily: "'Outfit', sans-serif" }}>
-                AUTONEX
-              </span>
-              <span style={{ display: "block", fontSize: "0.55rem", letterSpacing: "0.12em", color: "#CDBDEB", textTransform: "uppercase" }}>
-                Atelier Vault
-              </span>
+
+            {/* Official PayPal Logo on Card */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <svg width="22" height="26" viewBox="0 0 100 115" fill="none">
+                <path d="M28 10h34c16 0 28 9 28 25 0 14-9 24-22 25h-14l-8 45H22l18-95h-12z" fill="#003087" />
+                <path d="M40 30h34c16 0 26 9 26 23 0 14-9 24-22 25h-14l-6 32H35l14-80h-9z" fill="#0079C1" />
+              </svg>
+              <div style={{ textAlign: "right" }}>
+                <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#FFFFFF", fontFamily: "'Outfit', sans-serif" }}>
+                  <span style={{ color: "#38BDF8" }}>Pay</span><span style={{ color: "#60A5FA" }}>Pal</span>
+                </span>
+                <span style={{ display: "block", fontSize: "0.52rem", letterSpacing: "0.08em", color: "#34D399", fontWeight: 700, textTransform: "uppercase" }}>
+                  ✓ Verified
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Middle: Masked Card Number */}
-          <div style={{ letterSpacing: "0.22em", fontSize: "1.05rem", fontWeight: 700, color: "#FFFFFF", fontFamily: "'Fira Code', 'Courier New', monospace", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
-            •••• •••• •••• 8824
+          {/* Middle: Masked Card Number & Verification Badge */}
+          <div>
+            <div style={{ letterSpacing: "0.22em", fontSize: "1.05rem", fontWeight: 700, color: "#FFFFFF", fontFamily: "'Fira Code', 'Courier New', monospace", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
+              •••• •••• •••• 8824
+            </div>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "5px", background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.4)", borderRadius: "6px", padding: "2px 8px", marginTop: "4px" }}>
+              <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#34D399" }} />
+              <span style={{ fontSize: "0.62rem", color: "#34D399", fontWeight: 700 }}>PayPal Sandbox Instant Capture</span>
+            </div>
           </div>
 
-          {/* Bottom Row: Cardholder & Expiry & Network Emblem */}
+          {/* Bottom Row: Cardholder & Expiry & PayPal Verified Stamp */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
             <div>
               <span style={{ display: "block", fontSize: "0.52rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "#B8B0CC" }}>
-                Smart Governance
+                Authorized Buyer
               </span>
               <strong style={{ fontSize: "0.76rem", color: "#FFFFFF", letterSpacing: "0.03em", fontFamily: "'Outfit', sans-serif" }}>
-                Fix Spending Limits Every Month
+                AUTONEX Agent Vault
               </strong>
             </div>
             <div>
@@ -327,16 +182,26 @@ export default function HeroMorphShowcase() {
                 08/29
               </strong>
             </div>
-            {/* Dual Circle Luxury Card Network Emblem */}
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#F4D5D9", opacity: 0.88 }} />
-              <div style={{ width: "20px", height: "20px", borderRadius: "50%", background: "#A78BFA", opacity: 0.85, marginLeft: "-8px" }} />
+            {/* PayPal Verified Stamp */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+                background: "rgba(0, 121, 193, 0.25)",
+                border: "1px solid rgba(0, 121, 193, 0.6)",
+                padding: "3px 8px",
+                borderRadius: "8px"
+              }}
+            >
+              <span style={{ color: "#34D399", fontSize: "0.75rem", fontWeight: 900 }}>✓</span>
+              <span style={{ color: "#FFFFFF", fontSize: "0.68rem", fontWeight: 800 }}>PayPal</span>
             </div>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* SCENE 2: HERMORA AI BOT (PURPLE ASSISTANT)                               */}
+        {/* SCENE 2: AUTONEX AI BOT (PURPLE ASSISTANT)                                */}
         {/* ========================================================================= */}
         <div
           className={`showcase-scene scene-ai-bot ${activeScene === 1 ? "active" : ""}`}
@@ -353,7 +218,7 @@ export default function HeroMorphShowcase() {
             pointerEvents: activeScene === 1 ? "auto" : "none"
           }}
         >
-          {/* Animated 3D AI Bot Mascot */}
+          {/* Animated AI Bot Mascot */}
           <div
             style={{
               position: "relative",
@@ -445,7 +310,7 @@ export default function HeroMorphShowcase() {
         </div>
 
         {/* ========================================================================= */}
-        {/* SCENE 3: OFFICIAL PAYPAL VERIFIED                                        */}
+        {/* SCENE 3: OFFICIAL PAYPAL VERIFIED                                         */}
         {/* ========================================================================= */}
         <div
           className={`showcase-scene scene-paypal ${activeScene === 2 ? "active" : ""}`}
@@ -468,17 +333,14 @@ export default function HeroMorphShowcase() {
           {/* Official PayPal Monogram & Logo */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "14px" }}>
             <svg width="42" height="48" viewBox="0 0 100 115" fill="none">
-              {/* Dark Blue Left P */}
               <path
                 d="M28 10h34c16 0 28 9 28 25 0 14-9 24-22 25h-14l-8 45H22l18-95h-12z"
                 fill="#003087"
               />
-              {/* Light Blue Foreground P */}
               <path
                 d="M40 30h34c16 0 26 9 26 23 0 14-9 24-22 25h-14l-6 32H35l14-80h-9z"
                 fill="#0079C1"
               />
-              {/* Overlap Shade */}
               <path
                 d="M58 55c-2 0-4 0-6 0l-3 18h12c10 0 17-6 19-15-2-2-5-3-9-3h-13z"
                 fill="#002066"
@@ -523,7 +385,7 @@ export default function HeroMorphShowcase() {
         </div>
 
         {/* ========================================================================= */}
-        {/* SCENE 4: PIN VERIFIED                                                    */}
+        {/* SCENE 4: PIN VERIFIED                                                     */}
         {/* ========================================================================= */}
         <div
           className={`showcase-scene scene-pin ${activeScene === 3 ? "active" : ""}`}
@@ -543,7 +405,7 @@ export default function HeroMorphShowcase() {
             pointerEvents: activeScene === 3 ? "auto" : "none"
           }}
         >
-          {/* Security Lock with Animated Checkmark */}
+          {/* Security Lock */}
           <div
             style={{
               width: "60px",
@@ -568,7 +430,6 @@ export default function HeroMorphShowcase() {
             PIN Verified
           </div>
 
-          {/* Animated Verification Badge */}
           <div
             style={{
               display: "inline-flex",
@@ -596,17 +457,17 @@ export default function HeroMorphShowcase() {
         </div>
 
         {/* ========================================================================= */}
-        {/* SCENE 5: ZERO-TRUST AI WITH SCANNING SHIELD                              */}
+        {/* SCENE 5: HIGH-SPEED AI (SUB-SECOND EXECUTION)                              */}
         {/* ========================================================================= */}
         <div
-          className={`showcase-scene scene-zero-trust ${activeScene === 4 ? "active" : ""}`}
+          className={`showcase-scene scene-speed ${activeScene === 4 ? "active" : ""}`}
           style={{
             position: "absolute",
             width: "300px",
             borderRadius: "22px",
             background: "linear-gradient(135deg, rgba(36, 31, 58, 0.94) 0%, rgba(22, 17, 38, 0.96) 100%)",
-            border: "1.5px solid rgba(205, 189, 235, 0.5)",
-            boxShadow: "0 22px 50px rgba(18, 14, 30, 0.6), 0 0 25px rgba(167, 139, 250, 0.3)",
+            border: "1.5px solid rgba(245, 158, 11, 0.5)",
+            boxShadow: "0 22px 50px rgba(18, 14, 30, 0.6), 0 0 28px rgba(245, 158, 11, 0.25)",
             padding: "24px 22px",
             textAlign: "center",
             transform: activeScene === 4 ? "scale(1) translateY(0)" : "scale(0.88) translateY(24px)",
@@ -617,23 +478,24 @@ export default function HeroMorphShowcase() {
             overflow: "hidden"
           }}
         >
-          {/* Scanning Security Shield */}
+          {/* High-Speed Lightning Velocity Icon */}
           <div
             style={{
               position: "relative",
               width: "60px",
               height: "60px",
               borderRadius: "18px",
-              background: "rgba(91, 75, 138, 0.25)",
-              border: "1.5px solid rgba(205, 189, 235, 0.5)",
+              background: "rgba(245, 158, 11, 0.16)",
+              border: "1.5px solid rgba(245, 158, 11, 0.5)",
               margin: "0 auto 14px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              overflow: "hidden"
+              overflow: "hidden",
+              boxShadow: "0 0 24px rgba(245, 158, 11, 0.35)"
             }}
           >
-            {/* Vertical Scanning Laser Beam */}
+            {/* Speed Sweep Glow Beam */}
             <div
               className="shield-scan-beam"
               style={{
@@ -642,18 +504,18 @@ export default function HeroMorphShowcase() {
                 left: 0,
                 right: 0,
                 height: "3px",
-                background: "linear-gradient(90deg, transparent, #34D399, transparent)",
-                boxShadow: "0 0 8px #34D399",
-                animation: "shieldScanSweep 2s ease-in-out infinite"
+                background: "linear-gradient(90deg, transparent, #FBBF24, transparent)",
+                boxShadow: "0 0 8px #FBBF24",
+                animation: "shieldScanSweep 1.6s ease-in-out infinite"
               }}
             />
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#CDBDEB" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(251, 191, 36, 0.35)" />
             </svg>
           </div>
 
           <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#FFFFFF", fontFamily: "'Outfit', sans-serif" }}>
-            Zero-Trust AI
+            High-Speed AI
           </div>
 
           <div
@@ -661,9 +523,9 @@ export default function HeroMorphShowcase() {
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              background: "rgba(167, 139, 250, 0.18)",
-              border: "1px solid rgba(167, 139, 250, 0.4)",
-              color: "#CDBDEB",
+              background: "rgba(245, 158, 11, 0.18)",
+              border: "1px solid rgba(245, 158, 11, 0.45)",
+              color: "#FBBF24",
               padding: "4px 12px",
               borderRadius: "999px",
               fontSize: "0.78rem",
@@ -671,12 +533,12 @@ export default function HeroMorphShowcase() {
               marginTop: "8px"
             }}
           >
-            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#34D399" }} />
-            <span>Invariant Guarded</span>
+            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FBBF24", boxShadow: "0 0 6px #FBBF24" }} />
+            <span>⚡ Sub-Second Speed</span>
           </div>
 
           <div style={{ fontSize: "0.75rem", color: "#B8B0CC", marginTop: "12px", lineHeight: "1.4" }}>
-            Autonomous shopping strictly bound by predefined monthly caps and spending rules.
+            Autonomous agent reasoning with sub-second decision speeds and instant PayPal capture.
           </div>
         </div>
       </div>
@@ -707,12 +569,12 @@ export default function HeroMorphShowcase() {
                 width: isActive ? "28px" : "8px",
                 height: "8px",
                 borderRadius: "999px",
-                background: isActive ? "linear-gradient(90deg, #A78BFA, #7663A8)" : "rgba(205, 189, 235, 0.35)",
+                background: isActive ? "linear-gradient(90deg, #38BDF8, #60A5FA)" : "rgba(205, 189, 235, 0.35)",
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
                 transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                boxShadow: isActive ? "0 0 10px rgba(167, 139, 250, 0.5)" : "none"
+                boxShadow: isActive ? "0 0 10px rgba(56, 189, 248, 0.5)" : "none"
               }}
             />
           );
@@ -721,4 +583,3 @@ export default function HeroMorphShowcase() {
     </div>
   );
 }
-

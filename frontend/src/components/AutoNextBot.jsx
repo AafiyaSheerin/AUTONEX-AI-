@@ -14,7 +14,7 @@ export default function AutoNextBot({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [isWinking, setIsWinking] = useState(false);
-  const [bubbleText, setBubbleText] = useState("AUTONEX AI: Zero-Trust Active 🛡️");
+  const [bubbleText, setBubbleText] = useState("AUTONEX AI: High-Speed Active ⚡");
   const botRef = useRef(null);
 
   // Subtle 3D tilt tracking user's cursor
@@ -58,7 +58,7 @@ export default function AutoNextBot({
   }, [isMini]);
 
   const greetings = [
-    "AUTONEX AI: Zero-Trust Active 🛡️",
+    "AUTONEX AI: High-Speed Active ⚡",
     "All PIN Verifications Secure 🔐",
     "Ready to Assist Shopping 🛍️",
     "PayPal Sandbox Connected 💳",
