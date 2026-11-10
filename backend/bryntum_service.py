@@ -58,6 +58,172 @@ COURIERS = [
     {"id": "fedex", "name": "FedEx"}
 ]
 
+def _resolve_order_buyer_and_address(t: dict) -> tuple[str, str]:
+    """Dynamically resolves real buyer name and delivery address from transaction and user profile."""
+    try:
+        from auth_service import get_user_by_email
+    except Exception:
+        get_user_by_email = lambda e: None
+
+    u_email = (t.get("user_email") or t.get("customer_email") or "").strip()
+    user_obj = get_user_by_email(u_email) if u_email else None
+
+    # 1. Resolve buyer name
+    buyer = t.get("buyer_name") or t.get("customer_name")
+    if isinstance(t.get("delivery_destination"), dict):
+        dest_d = t.get("delivery_destination")
+        buyer = dest_d.get("name") or dest_d.get("recipient_name") or buyer
+
+    if (not buyer or buyer in ("Aafiya Sheerin", "Valued Client")) and user_obj:
+        buyer = user_obj.get("name") or u_email.split("@")[0].replace(".", " ").title()
+    if not buyer and u_email:
+        buyer = u_email.split("@")[0].replace(".", " ").title()
+    if not buyer:
+        buyer = "Customer"
+
+    # 2. Resolve delivery address
+    addr = None
+    dest = t.get("delivery_destination") or t.get("shipping_address")
+    if isinstance(dest, dict):
+        addr = dest.get("full_address") or dest.get("street")
+    elif dest and str(dest).strip():
+        addr = str(dest).strip()
+
+    if (not addr or "DIFC Gate" in addr or "Penthouse 4B" in addr or addr == "Standard Delivery Address") and user_obj:
+        saved = user_obj.get("saved_addresses", [])
+        def_addr = next((a for a in saved if a.get("is_default")), None) or (saved[0] if saved else None)
+        if def_addr and def_addr.get("full_address"):
+            addr = def_addr.get("full_address")
+        elif user_obj.get("shipping_address", {}).get("street"):
+            addr = user_obj.get("shipping_address", {}).get("street")
+
+    if not addr or "DIFC Gate" in addr:
+        addr = "Standard Delivery Address"
+
+    return buyer, addr
+
+def schedule_order_delivery(
+    transaction_id: str,
+    product_name: str,
+    recipient_name: str,
+    destination_address: str,
+    price_usd: float = 42.0,
+    delivery_days: int = 2,
+    recipient_phone: str = "",
+    order_id: str = None,
+    paypal_order_id: str = None,
+    paypal_capture_id: str = None,
+    courier: str = "DHL Express"
+):
+    """
+    Called upon successful payment to register the order in Bryntum Logistics store immediately.
+    Ensures real customer name, real address, real PayPal IDs and real dates are reflected.
+    """
+    oid = order_id or (f"ORD-{paypal_order_id}" if paypal_order_id and not paypal_order_id.startswith("PAYPAL_SANDBOX_ORD_") else None)
+    if not oid:
+        oid = f"ORD-{str(transaction_id).replace('txn_', '')}" if "txn_" in str(transaction_id) else f"ORD-{transaction_id}"
+
+    base_dt = datetime.now(timezone.utc)
+    d0_str = base_dt.strftime("%Y-%m-%d")
+    d1_str = (base_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+    d2_str = (base_dt + timedelta(days=2)).strftime("%Y-%m-%d")
+    d3_str = (base_dt + timedelta(days=3)).strftime("%Y-%m-%d")
+
+    base_id = len(_ORDERS_STORE) * 10 + 100
+
+    _ORDERS_STORE[oid] = {
+        "order_id": oid,
+        "product": product_name,
+        "buyer_name": recipient_name,
+        "address": destination_address,
+        "courier": courier,
+        "status": "packaging",
+        "delay_days": 0,
+        "estimated_delivery": d3_str,
+        "amount": price_usd,
+        "paypal_order_id": paypal_order_id or f"PAYPAL_{oid}",
+        "paypal_capture_id": paypal_capture_id,
+        "paypal_status": "CAPTURED",
+        "policy_decision": "ALLOWED",
+        "placed_by_agent": True,
+        "tasks": [
+            {
+                "id": base_id + 1,
+                "name": "Payment completed by customer via PayPal",
+                "start_date": d0_str,
+                "duration": 1,
+                "percent_done": 100,
+                "baselines": [{"startDate": d0_str, "duration": 1}]
+            },
+            {
+                "id": base_id + 2,
+                "name": "Packaging and verification",
+                "start_date": d1_str,
+                "duration": 1,
+                "percent_done": 80,
+                "baselines": [{"startDate": d1_str, "duration": 1}]
+            },
+            {
+                "id": base_id + 3,
+                "name": f"In transit with {courier}",
+                "start_date": d2_str,
+                "duration": 1,
+                "percent_done": 0,
+                "baselines": [{"startDate": d2_str, "duration": 1}]
+            },
+            {
+                "id": base_id + 4,
+                "name": "Doorstep handover",
+                "start_date": d3_str,
+                "duration": 1,
+                "percent_done": 0,
+                "baselines": [{"startDate": d3_str, "duration": 1}]
+            }
+        ],
+        "dependencies": [
+            {"from": base_id + 1, "to": base_id + 2},
+            {"from": base_id + 2, "to": base_id + 3},
+            {"from": base_id + 3, "to": base_id + 4}
+        ]
+    }
+    return _ORDERS_STORE[oid]
+
+def dispatch_order_courier(order_id: str, tracking_number: str = None, notes: str = None) -> Dict[str, Any]:
+    """
+    POST /merchant/dispatch-order
+    Merchant confirms courier handover. Moves status to 'in_transit',
+    marks Packaging as 100% complete, and marks In Transit as active (60%).
+    """
+    order = _ORDERS_STORE.get(order_id)
+    if not order:
+        order = next((o for oid, o in _ORDERS_STORE.items() if order_id in oid or oid in order_id), None)
+
+    if not order:
+        return {"success": False, "message": f"Order {order_id} not found in logistics registry."}
+
+    order["status"] = "in_transit"
+    order["courier_dispatched"] = True
+    order["dispatched_at"] = datetime.now(timezone.utc).isoformat()
+    courier_name = order.get("courier", "DHL Express")
+    order["tracking_number"] = tracking_number or f"TRK-{courier_name[:3].upper()}-{datetime.now().strftime('%y%m%d%H%M')}"
+
+    for task in order.get("tasks", []):
+        t_name = task.get("name", "").lower()
+        if "packaging" in t_name:
+            task["percent_done"] = 100
+        elif "transit" in t_name or "courier" in t_name:
+            task["percent_done"] = 60
+
+    return {
+        "success": True,
+        "order_id": order.get("order_id", order_id),
+        "status": "in_transit",
+        "courier": courier_name,
+        "tracking_number": order["tracking_number"],
+        "dispatched_at": order["dispatched_at"],
+        "message": f"Courier dispatch confirmed! Order is now in transit with {courier_name}."
+    }
+
 def _init_seed_orders_if_empty():
     """No hardcoded seed orders - only real verified customer purchases."""
     return
@@ -74,12 +240,17 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
     try:
         from main import TRANSACTIONS
         for idx, (tid, t) in enumerate(TRANSACTIONS.items(), start=200):
-            # Only include verified paid transactions
             status = t.get("status")
             if status not in ("PAYMENT_VERIFIED", "VERIFIED", "SUCCESS", "COMPLETED"):
                 continue
 
-            oid = t.get("order_id") or (f"ORD-{str(tid).replace('txn_', '')}" if "txn_" in str(tid) else f"ORD-{tid}")
+            paypal_oid = t.get("paypal_order_id")
+            if paypal_oid and not paypal_oid.startswith("PAYPAL_SANDBOX_ORD_"):
+                oid = f"ORD-{paypal_oid}"
+            elif t.get("order_id"):
+                oid = t.get("order_id")
+            else:
+                oid = f"ORD-{str(tid).replace('txn_', '')}" if "txn_" in str(tid) else f"ORD-{tid}"
             
             # Determine real base order date
             created = t.get("created_at")
@@ -96,7 +267,6 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
             base_id = idx * 10
             d0_str = base_dt.strftime("%Y-%m-%d")
             
-            # Check for delay update
             delayed = next((d for d in reversed(_DELAY_NOTIFICATIONS) if d.get("order_id") in [oid, str(tid)]), None)
             delay_days = delayed.get("delay_days", 0) if delayed else 0
             
@@ -108,25 +278,23 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
             prod = t.get("selected_product") or {}
             pname = prod.get("name") or t.get("product_name") or "Artisan Fashion Item"
             amount = float(t.get("amount_usd") or prod.get("price") or t.get("price_usd") or 42.0)
-            u_email = t.get("user_email") or ""
-            buyer = t.get("buyer_name") or t.get("customer_name") or u_email.split("@")[0].replace(".", " ").title() or "Valued Client"
             
-            dest = t.get("delivery_destination") or t.get("shipping_address")
-            if isinstance(dest, dict):
-                full_addr = dest.get("full_address") or dest.get("street")
-                addr = str(full_addr) if full_addr else "Standard Delivery Address"
-            else:
-                addr = str(dest) if dest else "Standard Delivery Address"
-
+            buyer, addr = _resolve_order_buyer_and_address(t)
             courier = t.get("courier") or "DHL Express"
+
+            existing = _ORDERS_STORE.get(oid, {})
+            current_status = existing.get("status", "packaging" if delay_days == 0 else "rescheduled")
+            in_transit_pct = 60 if current_status == "in_transit" else 20
+            packaging_pct = 100 if current_status == "in_transit" else 80
 
             _ORDERS_STORE[oid] = {
                 "order_id": oid,
                 "product": pname,
                 "buyer_name": buyer,
                 "address": addr,
-                "courier": courier,
-                "status": "packaging" if delay_days == 0 else "rescheduled",
+                "courier": existing.get("courier", courier),
+                "status": current_status,
+                "courier_dispatched": existing.get("courier_dispatched", current_status == "in_transit"),
                 "delay_days": delay_days,
                 "estimated_delivery": eta_str,
                 "amount": amount,
@@ -137,7 +305,7 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
                 "tasks": [
                     {
                         "id": base_id + 1,
-                        "name": "PayPal capture and PIN verified",
+                        "name": "Payment completed by customer via PayPal",
                         "start_date": d0_str,
                         "duration": 1,
                         "percent_done": 100,
@@ -148,7 +316,7 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
                         "name": "Packaging and verification",
                         "start_date": d1_str,
                         "duration": 1 + delay_days,
-                        "percent_done": 80,
+                        "percent_done": packaging_pct,
                         "baselines": [{"startDate": d1_str, "duration": 1}]
                     },
                     {
@@ -156,7 +324,7 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
                         "name": f"In transit with {courier}",
                         "start_date": d2_str,
                         "duration": 1,
-                        "percent_done": 20,
+                        "percent_done": in_transit_pct,
                         "baselines": [{"startDate": d2_str, "duration": 1}]
                     },
                     {
@@ -184,7 +352,12 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
             data, err = _supabase_request("transactions?status=eq.PAYMENT_VERIFIED&select=*")
             if data and not err and isinstance(data, list):
                 for idx, t in enumerate(data, start=300):
-                    oid = t.get("transaction_id", f"ORD_{idx}").replace("txn_", "ORD-")
+                    p_oid = t.get("paypal_order_id")
+                    if p_oid and not p_oid.startswith("PAYPAL_SANDBOX_ORD_"):
+                        oid = f"ORD-{p_oid}"
+                    else:
+                        oid = t.get("order_id") or t.get("transaction_id", f"ORD_{idx}").replace("txn_", "ORD-")
+                    
                     if oid not in _ORDERS_STORE:
                         base_id = idx * 10
                         c_at = t.get("created_at") or datetime.now(timezone.utc).isoformat()
@@ -193,12 +366,14 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
                         d2_str = (datetime.fromisoformat(str(c_at)[:19]) + timedelta(days=2)).strftime("%Y-%m-%d")
                         d3_str = (datetime.fromisoformat(str(c_at)[:19]) + timedelta(days=3)).strftime("%Y-%m-%d")
                         
+                        buyer, addr = _resolve_order_buyer_and_address(t)
+
                         _ORDERS_STORE[oid] = {
                             "order_id": oid,
                             "product": t.get("product_name", "Artisan Fashion Item"),
-                            "buyer_name": t.get("buyer_name", "Aafiya Sheerin"),
-                            "address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
-                            "courier": "DHL Express",
+                            "buyer_name": buyer,
+                            "address": addr,
+                            "courier": t.get("courier", "DHL Express"),
                             "status": "packaging",
                             "delay_days": 0,
                             "estimated_delivery": d3_str,
@@ -208,8 +383,8 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
                             "policy_decision": "ALLOWED",
                             "placed_by_agent": True,
                             "tasks": [
-                                {"id": base_id + 1, "name": "PayPal capture and PIN verified", "start_date": d0_str, "duration": 1, "percent_done": 100, "baselines": [{"startDate": d0_str, "duration": 1}]},
-                                {"id": base_id + 2, "name": "Packaging and verification", "start_date": d1_str, "duration": 1, "percent_done": 60, "baselines": [{"startDate": d1_str, "duration": 1}]},
+                                {"id": base_id + 1, "name": "Payment completed by customer via PayPal", "start_date": d0_str, "duration": 1, "percent_done": 100, "baselines": [{"startDate": d0_str, "duration": 1}]},
+                                {"id": base_id + 2, "name": "Packaging and verification", "start_date": d1_str, "duration": 1, "percent_done": 80, "baselines": [{"startDate": d1_str, "duration": 1}]},
                                 {"id": base_id + 3, "name": "In transit", "start_date": d2_str, "duration": 1, "percent_done": 0, "baselines": [{"startDate": d2_str, "duration": 1}]},
                                 {"id": base_id + 4, "name": "Doorstep handover", "start_date": d3_str, "duration": 1, "percent_done": 0, "baselines": [{"startDate": d3_str, "duration": 1}]}
                             ],

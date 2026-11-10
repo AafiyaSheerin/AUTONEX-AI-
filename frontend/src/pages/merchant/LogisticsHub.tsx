@@ -39,8 +39,9 @@ export default function LogisticsHub({ API_URL }: LogisticsHubProps) {
     { id: "drone", name: "Hermora Drone Fleet" },
     { id: "fedex", name: "FedEx" }
   ]);
-  const [selectedOrderId, setSelectedOrderId] = useState<string>("ORD-101");
+  const [selectedOrderId, setSelectedOrderId] = useState<string>("");
   const [delayDays, setDelayDays] = useState<number>(0);
+  const [dispatchLoading, setDispatchLoading] = useState<boolean>(false);
   const [policyBanner, setPolicyBanner] = useState<{
     type: "allowed" | "needs-approval" | "blocked";
     text: string;
@@ -57,8 +58,10 @@ export default function LogisticsHub({ API_URL }: LogisticsHubProps) {
       if (data.orders && Array.isArray(data.orders)) {
         setOrders(data.orders);
         if (data.couriers) setCouriers(data.couriers);
-        if (data.orders.length > 0 && !selectedOrderId) {
-          setSelectedOrderId(data.orders[0].order_id);
+        if (data.orders.length > 0) {
+          if (!selectedOrderId || !data.orders.some((o: any) => o.order_id === selectedOrderId)) {
+            setSelectedOrderId(data.orders[data.orders.length - 1].order_id);
+          }
         }
       }
     } catch (err) {
@@ -74,8 +77,7 @@ export default function LogisticsHub({ API_URL }: LogisticsHubProps) {
   const activeOrder = useMemo(() => {
     return (
       orders.find((o) => o.order_id === selectedOrderId) ||
-      orders[0] ||
-      null
+      (orders.length > 0 ? orders[orders.length - 1] : null)
     );
   }, [orders, selectedOrderId]);
 
@@ -256,6 +258,42 @@ export default function LogisticsHub({ API_URL }: LogisticsHubProps) {
     setTimeout(() => setPolicyBanner(null), 6000);
   };
 
+  // Merchant Action: Confirm Courier Sent / Dispatch Order
+  const handleDispatchCourier = async () => {
+    if (!activeOrder) return;
+    setDispatchLoading(true);
+    try {
+      const res = await fetch(`${resolvedApiUrl}/merchant/dispatch-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          order_id: activeOrder.order_id
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPolicyBanner({
+          type: "allowed",
+          text: `🚀 Courier Dispatched! Order ${activeOrder.order_id} is now In Transit with ${activeOrder.courier}. Tracking ID: ${data.tracking_number || "TRK-EXP"}. Buyer delivery calendar updated.`
+        });
+        await fetchOrders();
+      } else {
+        setPolicyBanner({
+          type: "blocked",
+          text: data.message || "Failed to dispatch courier."
+        });
+      }
+    } catch (err: any) {
+      setPolicyBanner({
+        type: "blocked",
+        text: `Dispatch error: ${err.message}`
+      });
+    } finally {
+      setDispatchLoading(false);
+      setTimeout(() => setPolicyBanner(null), 7000);
+    }
+  };
+
   // Asynchronous Drag-and-Drop policy enforcement on Scheduler
   const onBeforeEventDropFinalize = async ({ context }: any) => {
     // Tell Bryntum Scheduler this drop is validated asynchronously
@@ -405,15 +443,51 @@ export default function LogisticsHub({ API_URL }: LogisticsHubProps) {
               </span>
             </div>
 
-            {/* Delay Simulation Button */}
-            <button
-              type="button"
-              className="delay-action-btn"
-              onClick={handleSimulateDelay}
-              title="Adds 1 day to Packaging duration and cascades dependent tasks via Bryntum engine"
-            >
-              ⏱️ Simulate +1 Day Delay {delayDays > 0 ? `(+${delayDays}d applied)` : ""}
-            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+              {/* Confirm Courier Sent / Dispatch Button */}
+              <button
+                type="button"
+                className="dispatch-action-btn"
+                onClick={handleDispatchCourier}
+                disabled={dispatchLoading || activeOrder?.status === "in_transit" || activeOrder?.courier_dispatched}
+                style={{
+                  background: (activeOrder?.status === "in_transit" || activeOrder?.courier_dispatched)
+                    ? "rgba(16, 185, 129, 0.2)"
+                    : "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+                  color: "#FFFFFF",
+                  border: `1px solid ${activeOrder?.status === "in_transit" || activeOrder?.courier_dispatched ? "rgba(16, 185, 129, 0.6)" : "rgba(16, 185, 129, 0.8)"}`,
+                  padding: "8px 14px",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  fontSize: "0.82rem",
+                  cursor: (dispatchLoading || activeOrder?.status === "in_transit" || activeOrder?.courier_dispatched) ? "default" : "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  boxShadow: (activeOrder?.status === "in_transit" || activeOrder?.courier_dispatched) ? "none" : "0 4px 12px rgba(16, 185, 129, 0.35)",
+                  transition: "all 0.2s ease"
+                }}
+                title={activeOrder?.status === "in_transit" || activeOrder?.courier_dispatched ? "Courier already dispatched and in transit" : "Merchant confirms handover to courier"}
+              >
+                {dispatchLoading ? (
+                  <>⏳ Dispatching...</>
+                ) : activeOrder?.status === "in_transit" || activeOrder?.courier_dispatched ? (
+                  <>✓ Courier Dispatched</>
+                ) : (
+                  <>🚀 Confirm Courier Sent / Dispatch</>
+                )}
+              </button>
+
+              {/* Delay Simulation Button */}
+              <button
+                type="button"
+                className="delay-action-btn"
+                onClick={handleSimulateDelay}
+                title="Adds 1 day to Packaging duration and cascades dependent tasks via Bryntum engine"
+              >
+                ⏱️ Simulate +1 Day Delay {delayDays > 0 ? `(+${delayDays}d applied)` : ""}
+              </button>
+            </div>
           </div>
 
           {/* Tags Row */}

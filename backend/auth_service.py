@@ -391,12 +391,13 @@ def sanitize_user(user):
     copy_u["auto_revives_monthly"] = True
     copy_u["current_cycle_month"] = user.get("last_cycle_month") or get_current_cycle_month()
     copy_u["next_revival_date"] = get_next_cycle_date_str()
+    u_disp_name = copy_u.get("shipping_address", {}).get("recipient_name") or copy_u.get("name") or copy_u.get("email", "").split("@")[0].replace(".", " ").title() or "Valued Client"
     copy_u["saved_addresses"] = copy_u.get("saved_addresses") or [
         {
             "id": "addr_01",
-            "name": copy_u.get("shipping_address", {}).get("recipient_name") or copy_u.get("name", "Aafiya Sheerin"),
-            "phone": copy_u.get("shipping_address", {}).get("phone") or "+971 50 123 4567",
-            "full_address": copy_u.get("shipping_address", {}).get("street") or "Penthouse 4B, Al-Reem Tower, Dubai Marina, UAE",
+            "name": u_disp_name,
+            "phone": copy_u.get("shipping_address", {}).get("phone") or "+91 9790854949",
+            "full_address": copy_u.get("shipping_address", {}).get("street") or "Standard Delivery Address",
             "is_default": True
         }
     ]

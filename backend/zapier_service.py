@@ -17,13 +17,18 @@ def format_dynamic_order_email(data: dict) -> dict:
     """
     Renders 100% dynamic order confirmation email content for any buyer and order.
     Extracts real recipient name, phone, delivery address, product, and PayPal payment details.
+    Never exposes or includes PIN or security credentials in the email.
     """
-    buyer_name = data.get("buyer_name") or "Valued Client"
-    buyer_email = data.get("buyer_email") or data.get("to_email") or "buyer@hermora.com"
-    buyer_phone = data.get("buyer_phone") or data.get("phone") or "+971 50 123 4567"
-    raw_addr = data.get("delivery_address") or data.get("full_address") or data.get("delivery_destination") or "42 Luxury Promenade, Suite 4B, Dubai Marina, UAE"
+    buyer_name = data.get("buyer_name") or data.get("name") or "Valued Client"
+    buyer_email = data.get("buyer_email") or data.get("to_email") or data.get("email") or "buyer@autonex.com"
+    buyer_phone = data.get("buyer_phone") or data.get("phone") or "+91 9790854949"
+    raw_addr = data.get("delivery_address") or data.get("full_address") or data.get("delivery_destination") or "Standard Delivery Destination"
     if isinstance(raw_addr, dict):
-        delivery_address = raw_addr.get("full_address") or raw_addr.get("street") or raw_addr.get("name") or "42 Luxury Promenade, Suite 4B, Dubai Marina, UAE"
+        delivery_address = raw_addr.get("full_address") or raw_addr.get("street") or raw_addr.get("name") or "Standard Delivery Destination"
+        if not buyer_phone or buyer_phone == "+91 9790854949":
+            buyer_phone = raw_addr.get("phone") or buyer_phone
+        if not buyer_name or buyer_name == "Valued Client":
+            buyer_name = raw_addr.get("name") or raw_addr.get("recipient_name") or buyer_name
     else:
         delivery_address = str(raw_addr)
     product_name = data.get("product_name") or "Artisan Item"
@@ -31,14 +36,14 @@ def format_dynamic_order_email(data: dict) -> dict:
     amount_usd = float(data.get("amount_usd", 0.0))
     order_id = data.get("order_id") or "ORD_AUTONEX"
     capture_id = data.get("capture_id") or "PAYPAL_CAP"
-    security_auth = data.get("security_authorization") or "4-Digit Security PIN (2007 Authorized)"
-    assigned_courier = data.get("assigned_courier") or "DHL Express Aviation / Drone Priority Corridor"
+    payment_status = "Payment completed by customer via PayPal"
+    assigned_courier = data.get("assigned_courier") or "DHL Express Priority Corridor"
 
     subject = f"Order Confirmed: {product_name} (${amount_usd:.2f} USD) — AUTONEX Artisan Collective"
 
     body_text = f"""Dear {buyer_name},
 
-Thank you for your order with AUTONEX. Your autonomous AI agent has completed your purchase via PayPal Sandbox.
+Thank you for your order with AUTONEX. Your payment has been completed successfully via PayPal Sandbox.
 
 ──────────────────────────────────────────────────
 ORDER CONFIRMATION & DISPATCH RECEIPT
@@ -48,7 +53,7 @@ Merchant: {merchant}
 Total Amount: ${amount_usd:.2f} USD
 PayPal Capture ID: {capture_id}
 Order ID: {order_id}
-Security Authorization: {security_auth}
+Payment Status: {payment_status}
 
 SHIPPING & DELIVERY ADDRESS:
 Recipient: {buyer_name}
@@ -56,11 +61,11 @@ Phone: {buyer_phone}
 Delivery Address: {delivery_address}
 Assigned Logistics: {assigned_courier}
 
-Your shipment is registered in the Courier Scheduler and is currently being prepared for dispatch.
+Your order is registered in the Courier Fulfilment Scheduler and will be dispatched directly to your doorstep.
 
 Warm regards,
-AUTONEX Autonomous Agentic Concierge
-support@autonex.com • Dubai, UAE
+AUTONEX Autonomous Commerce
+concierge@autonex.com
 """
 
     body_html = f"""<!DOCTYPE html>
@@ -88,13 +93,13 @@ support@autonex.com • Dubai, UAE
     <div class="header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span class="logo">AUTONEX</span>
-        <span class="badge">✓ PayPal Verified & Captured</span>
+        <span class="badge">✓ Payment Completed via PayPal</span>
       </div>
-      <p style="margin: 8px 0 0; color: #94a3b8; font-size: 14px;">Post-Purchase Automated Notification</p>
+      <p style="margin: 8px 0 0; color: #94a3b8; font-size: 14px;">Post-Purchase Order Confirmation</p>
     </div>
 
     <p style="font-size: 15px; line-height: 1.5;">Dear <strong>{buyer_name}</strong>,</p>
-    <p style="font-size: 14px; color: #cbd5e1; line-height: 1.5;">Your autonomous AI agent has completed your purchase on AUTONEX. Payment was authorized with your <strong>{security_auth}</strong> and captured successfully via PayPal Sandbox.</p>
+    <p style="font-size: 14px; color: #cbd5e1; line-height: 1.5;">Thank you for your order. Payment has been completed by customer via PayPal Sandbox.</p>
 
     <div class="product-box">
       <div class="product-title">{product_name}</div>
@@ -113,12 +118,12 @@ support@autonex.com • Dubai, UAE
       <div class="info-row"><span class="info-label">PayPal Capture ID</span><span class="info-val" style="font-family: monospace; color: #38bdf8;">{capture_id}</span></div>
       <div class="info-row"><span class="info-label">Order ID</span><span class="info-val">{order_id}</span></div>
       <div class="info-row"><span class="info-label">Assigned Courier</span><span class="info-val">{assigned_courier}</span></div>
-      <div class="info-row"><span class="info-label">Security Verification</span><span class="info-val" style="color: #34d399;">✓ {security_auth}</span></div>
+      <div class="info-row"><span class="info-label">Payment Status</span><span class="info-val" style="color: #34d399;">✓ {payment_status}</span></div>
     </div>
 
     <div class="footer">
-      <p>AUTONEX Autonomous Agentic Commerce • Dubai Marina, UAE</p>
-      <p>Sent automatically via Zapier Webhook Trigger • Support: concierge@autonex.com</p>
+      <p>AUTONEX Autonomous Commerce Platform</p>
+      <p>Automated Order Notification • Support: concierge@autonex.com</p>
     </div>
   </div>
 </body>
@@ -136,7 +141,7 @@ support@autonex.com • Dubai, UAE
         "amount_usd": amount_usd,
         "order_id": order_id,
         "capture_id": capture_id,
-        "security_authorization": security_auth,
+        "payment_status": payment_status,
         "assigned_courier": assigned_courier,
         "merchant": merchant
     }
@@ -179,20 +184,62 @@ def dispatch_zapier_webhook(event_type: str, data: dict):
     payload = {
         "event": event_type,
         "timestamp": timestamp,
-        "source": "AUTONEX Agentic Commerce & PayPal Security Platform",
-        # Top-level direct email fields for Zapier email actions
+        "source": "AUTONEX Agentic Commerce Platform",
+
+        # Recipient email aliases (compatible with any Zapier email/Gmail step)
         "to_email": email_data["to_email"],
+        "to": email_data["to_email"],
+        "email": email_data["to_email"],
+        "recipient": email_data["to_email"],
+        "recipient_email": email_data["to_email"],
+        "buyer_email": email_data["to_email"],
+
+        # Recipient name aliases
         "buyer_name": email_data["buyer_name"],
+        "name": email_data["buyer_name"],
+        "recipient_name": email_data["buyer_name"],
+        "customer_name": email_data["buyer_name"],
+
+        # Phone aliases
         "buyer_phone": email_data["buyer_phone"],
+        "phone": email_data["buyer_phone"],
+        "contact_phone": email_data["buyer_phone"],
+
+        # Address aliases
         "delivery_address": email_data["delivery_address"],
+        "address": email_data["delivery_address"],
+        "shipping_address": email_data["delivery_address"],
+        "destination": email_data["delivery_address"],
+
+        # Subject & body aliases
+        "subject": email_data["email_subject"],
+        "email_subject": email_data["email_subject"],
+        "title": email_data["email_subject"],
+        "body": email_data["email_body"],
+        "email_body": email_data["email_body"],
+        "message": email_data["email_body"],
+        "content": email_data["email_body"],
+        "text": email_data["email_body"],
+        "body_plain": email_data["email_body"],
+        "html": email_data["email_html"],
+        "body_html": email_data["email_html"],
+        "email_html": email_data["email_html"],
+
+        # Transaction details
         "product_name": email_data["product_name"],
+        "item": email_data["product_name"],
         "amount_usd": email_data["amount_usd"],
+        "amount": email_data["amount_usd"],
+        "price": email_data["amount_usd"],
+        "total": email_data["amount_usd"],
         "order_id": email_data["order_id"],
         "capture_id": email_data["capture_id"],
-        "email_subject": email_data["email_subject"],
-        "email_body": email_data["email_body"],
-        "email_html": email_data["email_html"],
+        "paypal_capture_id": email_data["capture_id"],
+        "payment_status": "Payment completed by customer via PayPal",
         "assigned_courier": email_data["assigned_courier"],
+        "courier": email_data["assigned_courier"],
+        "merchant": email_data.get("merchant", "AUTONEX Artisan Collective"),
+
         "data": merged_data
     }
 
@@ -244,70 +291,6 @@ def get_zapier_status():
     masked_url = ""
     if webhook_url:
         masked_url = webhook_url[:24] + "..." + webhook_url[-6:] if len(webhook_url) > 30 else webhook_url
-
-    # If outbox is empty, seed initial dynamic email confirmations for default orders
-    if not _DYNAMIC_EMAIL_OUTBOX:
-        initial_seeds = [
-            {
-                "product_name": "Midnight Silk Abaya",
-                "amount_usd": 42.00,
-                "buyer_name": "Aafiya Sheerin",
-                "buyer_email": "demo@hermora.com",
-                "buyer_phone": "+971 50 123 4567",
-                "delivery_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, UAE",
-                "order_id": "ORD_MIDNIGHT_ABAYA",
-                "capture_id": "PAYPAL_CAP_8812A",
-                "merchant": "Hermora Silk Atelier",
-                "assigned_courier": "DHL Express Aviation Fleet",
-                "security_authorization": "4-Digit Security PIN (2007 Authorized)"
-            },
-            {
-                "product_name": "Premium Chiffon Hijab",
-                "amount_usd": 14.50,
-                "buyer_name": "Aafiya Sheerin",
-                "buyer_email": "demo@hermora.com",
-                "buyer_phone": "+971 50 123 4567",
-                "delivery_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, UAE",
-                "order_id": "ORD_CHIFFON_HIJAB",
-                "capture_id": "PAYPAL_CAP_4410C",
-                "merchant": "Luma Hijabs & Scarves",
-                "assigned_courier": "Hermora Autonomous Drone Fleet",
-                "security_authorization": "Autonomous Micro-Spend (< $15.00)"
-            },
-            {
-                "product_name": "Amber & Oud Elixir",
-                "amount_usd": 68.00,
-                "buyer_name": "Zaid Al-Mansoor",
-                "buyer_email": "zaid@luxuryoud.ae",
-                "buyer_phone": "+971 52 987 1122",
-                "delivery_address": "Villa 18, Palm Jumeirah West Frond, Dubai, UAE",
-                "order_id": "ORD_AMBER_OUD",
-                "capture_id": "PAYPAL_CAP_9941B",
-                "merchant": "Sahara Oud & Perfumery",
-                "assigned_courier": "DHL Express Aviation Fleet",
-                "security_authorization": "4-Digit Security PIN (2007 Authorized)"
-            }
-        ]
-        for seed in initial_seeds:
-            email_info = format_dynamic_order_email(seed)
-            _DYNAMIC_EMAIL_OUTBOX.append({
-                "id": f"zout_{len(_DYNAMIC_EMAIL_OUTBOX) + 1}",
-                "event": "PAYPAL_PAYMENT_VERIFIED",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-                "sent_to_url": webhook_url or "https://hooks.zapier.com/hooks/catch/29381166/49ncwqi/",
-                "to_email": email_info["to_email"],
-                "buyer_name": email_info["buyer_name"],
-                "buyer_phone": email_info["buyer_phone"],
-                "delivery_address": email_info["delivery_address"],
-                "product_name": email_info["product_name"],
-                "amount_usd": email_info["amount_usd"],
-                "order_id": email_info["order_id"],
-                "capture_id": email_info["capture_id"],
-                "email_subject": email_info["email_subject"],
-                "email_body": email_info["email_body"],
-                "email_html": email_info["email_html"],
-                "status": "DELIVERED"
-            })
 
     return {
         "configured": bool(webhook_url),

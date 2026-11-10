@@ -942,13 +942,11 @@ def get_merchant_transactions():
         product_info = t.get("selected_product", {})
         price = t.get("amount_usd", t.get("price_usd", product_info.get("price", 0.0)))
         
-        bio_status = "Autonomous Micro-Spend (< $15.00)"
-        if t.get("pin_verified"):
-            bio_status = "🔐 PIN Verified (2007 Authorized)"
-        elif t.get("face_verified"):
-            bio_status = "🔐 PIN Verified (2007 Authorized)"
-        elif t.get("requires_face_id"):
-            bio_status = "🔐 Security PIN Required"
+        bio_status = "Payment completed by customer via PayPal"
+        if t.get("pin_verified") or t.get("face_verified"):
+            bio_status = "✓ Payment completed via PayPal"
+        elif t.get("status") == "PAYMENT_VERIFIED":
+            bio_status = "✓ Payment completed via PayPal"
 
         u_email = t.get("user_email") or "demo@hermora.com"
         u_name = t.get("customer_name") or t.get("buyer_name")
@@ -1090,6 +1088,16 @@ def bryntum_reassign_endpoint(req: CourierReassignRequest):
 @app.post("/merchant/delay-update")
 def bryntum_delay_endpoint(req: DelayUpdateRequest):
     return update_order_delay(req.order_id, req.delay_days, req.new_eta)
+
+class DispatchOrderRequest(BaseModel):
+    order_id: str
+    tracking_number: str | None = None
+    notes: str | None = None
+
+@app.post("/merchant/dispatch-order")
+def bryntum_dispatch_endpoint(req: DispatchOrderRequest):
+    from bryntum_service import dispatch_order_courier
+    return dispatch_order_courier(req.order_id, req.tracking_number, req.notes)
 
 if __name__ == "__main__":
     import uvicorn

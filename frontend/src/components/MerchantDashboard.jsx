@@ -1246,7 +1246,7 @@ export default function MerchantDashboard({ onSwitchToClient: _onSwitchToClient,
                     </div>
 
                     <div style={{ fontSize: "0.8rem", color: "#CDBDEB", marginBottom: "4px" }}>
-                      To: <strong>{d.buyer_name || "Client"}</strong> &lt;{d.to_email || "buyer@hermora.com"}&gt;
+                      To: <strong>{d.buyer_name || "Client"}</strong> &lt;{d.to_email || "buyer@autonex.com"}&gt;
                       {d.buyer_phone && <span style={{ color: "#B8B0CC", marginLeft: "6px" }}>📞 {d.buyer_phone}</span>}
                     </div>
 

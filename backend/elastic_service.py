@@ -19,7 +19,7 @@ _IN_MEMORY_SECURITY_LOGS = [
         "severity": "INFO",
         "details": {
             "authorized_by": "Aafiya Sheerin (demo@hermora.com)",
-            "auth_method": "Security PIN (2007 Authorized)",
+            "auth_method": "Security PIN Authorization",
             "order_id": "ORD_MIDNIGHT_ABAYA",
             "amount_usd": 42.00,
             "status": "UNLOCKED_PAYPAL_EXECUTION"

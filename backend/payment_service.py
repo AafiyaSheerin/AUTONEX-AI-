@@ -300,6 +300,15 @@ def verify_payment(
     if not buyer_name:
         buyer_name = transaction.get("customer_name") or transaction.get("buyer_name") or updated_user.get("name") or actual_buyer_email.split("@")[0].replace(".", " ").title()
     if not buyer_phone:
+        user_obj = get_user_by_email(actual_buyer_email)
+        if user_obj:
+            saved = user_obj.get("saved_addresses", [])
+            def_addr = next((a for a in saved if a.get("is_default")), None) or (saved[0] if saved else None)
+            if def_addr and def_addr.get("phone"):
+                buyer_phone = def_addr.get("phone")
+            elif user_obj.get("shipping_address", {}).get("phone"):
+                buyer_phone = user_obj.get("shipping_address", {}).get("phone")
+    if not buyer_phone:
         buyer_phone = updated_user.get("shipping_address", {}).get("phone") or "+91 9790854949"
 
     transaction["customer_name"] = buyer_name
@@ -324,8 +333,8 @@ def verify_payment(
             "buyer_phone": buyer_phone,
             "delivery_address": dest_str,
             "product_name": transaction.get("selected_product", {}).get("name", "Artisan Item"),
-            "merchant": transaction.get("merchant", "Hermora Boutique"),
-            "security_authorization": "4-Digit PIN (2007 Authorized)" if transaction.get("pin_verified") else "Autonomous Micro-Spend (< $15.00)",
+            "merchant": transaction.get("merchant", "AUTONEX Artisan Collective"),
+            "payment_status": "Payment completed by customer via PayPal",
             "dispatch_status": "PROVISIONED_FOR_DISPATCH"
         })
     except Exception as z_err:
@@ -341,7 +350,11 @@ def verify_payment(
             destination_address=dest_str,
             price_usd=amount_usd,
             delivery_days=int(transaction.get("selected_product", {}).get("delivery_days", 2)),
-            recipient_phone=buyer_phone
+            recipient_phone=buyer_phone,
+            order_id=order_id,
+            paypal_order_id=order_id,
+            paypal_capture_id=capture_id,
+            courier=transaction.get("courier", "DHL Express")
         )
     except Exception as b_err:
         print(f"[Bryntum] Automatic delivery schedule error: {b_err}")

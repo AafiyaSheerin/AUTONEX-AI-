@@ -12,8 +12,8 @@ export default function SavedAddressModal({ isOpen, onClose, user, onAddressUpda
   const [showAddForm, setShowAddForm] = useState(false);
 
   // Form State with the exact 3 required fields
-  const [name, setName] = useState(user?.name || "Aafiya Sheerin");
-  const [phone, setPhone] = useState("+971 50 123 4567");
+  const [name, setName] = useState(user?.name || user?.email?.split("@")?.[0] || "");
+  const [phone, setPhone] = useState(user?.shipping_address?.phone || "+91 9790854949");
   const [fullAddress, setFullAddress] = useState("");
   const [isDefault, setIsDefault] = useState(false);
 
@@ -408,7 +408,7 @@ export default function SavedAddressModal({ isOpen, onClose, user, onAddressUpda
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. +971 50 123 4567"
+                placeholder="e.g. +91 9790854949"
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
