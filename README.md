@@ -239,6 +239,61 @@ cd frontend && npm run build
 
 ---
 
+## 🔑 Testing Credentials & Judges' Walkthrough
+
+### Pre-Configured Test Credentials
+
+| Role | Email | Password | Pre-Configured Settings |
+| :--- | :--- | :--- | :--- |
+| **Buyer / Client** | `demo@hermora.com` | `hermora123` | • Monthly Allowance: **$500.00 USD**<br>• Autonomous Cap: **$15.00 USD**<br>• Security PIN: **`2007`** (or `1234`)<br>• Delivery Address: Dynamic Vault Destination |
+| **Merchant Admin** | `merchant@hermora.com` | `merchant123` | • Full access to **Merchant Hub**<br>• AG Grid Ledger, Catalog, Zapier, Elastic, Bryntum |
+| **PayPal Sandbox** | *Sandbox Mode Active* | *Sandbox Mode Active* | Pre-configured with active PayPal Sandbox credentials. Judges can complete payments via the PayPal Smart Button. |
+
+---
+
+### Step-by-Step Judges' Evaluation Walkthrough
+
+#### 1. Autonomous AI Shopping (< $15.00 Micro-Spend)
+1. Open the application (locally at `http://localhost:5173` or live on cloud).
+2. Sign in as Client (`demo@hermora.com` / `hermora123`), or browse directly.
+3. Open the **"✨ Ask AI to Buy"** drawer and prompt the agent:
+   > *"Find an artisan red find under $15 with 2-day delivery."*
+4. Notice that because the item is **\$15.00 or lower**, the autonomous micro-limit policy applies: the AI agent automatically provisions the checkout without interrupting the user.
+
+#### 2. Human Authorization Guardrail (> $15.00 Spends)
+1. In the Storefront, select an item priced above $15.00 (e.g. *Handcrafted Artisan Red Find* at $45.00) or prompt the AI:
+   > *"Buy a luxury item for $45."*
+2. The agent plans the purchase and identifies that the amount exceeds the autonomous limit ($15.00).
+3. The transaction is safely locked until human authorization is provided.
+4. Enter the Security PIN: **`2007`**.
+5. Click **"Verify PIN & Unlock PayPal"**.
+
+#### 3. Real-Time PayPal Sandbox Settlement
+1. Click the official **PayPal Smart Button** rendered in the drawer.
+2. The server creates an order via PayPal Orders API v2 (`/v2/checkout/orders`) and captures funds (`/capture`).
+3. An official cryptographic **Agent Decision Receipt** is generated, displaying:
+   - Unique **PayPal Capture ID**
+   - **Order ID**
+   - Sourced Merchant & Item details
+   - Dynamic **Delivery Destination & Customer Phone**
+4. Notice that the buyer's **Monthly Allowance** in the top navbar immediately deducts the exact spent amount.
+
+#### 4. Merchant Operations, AG Grid & Courier Dispatch
+1. Switch to the **Merchant** view by clicking **"💼 Merchant Hub"** in the top navbar (or sign in with `merchant@hermora.com` / `merchant123`).
+2. **AG Grid Financial Ledger (Section 1)**: Inspect real-time settlement rows, sort/filter transactions, and click **"Export AG Grid CSV"**.
+3. **Zapier Automations (Section 3)**: Inspect the Dynamic Buyer Confirmation Outbox. Click **"👁️ View Rendered Email"** to review the rendered HTML confirmation email sent to the buyer.
+4. **Fulfilment & Bryntum Logistics (Section 6)**:
+   - Select your recent order in the dropdown.
+   - Inspect the 4-stage supply chain Gantt timeline:
+     - *Payment completed by customer via PayPal (100%)*
+     - *Packaging and verification*
+     - *In transit with courier*
+     - *Doorstep handover*
+   - Click **"🚀 Confirm Courier Sent / Dispatch"**: Watch the order advance to **In Transit**, Packaging move to 100%, and courier tracking number generate.
+   - Click **"⏱️ Simulate +1 Day Delay"**: Watch the Bryntum engine automatically cascade downstream schedules and notify the buyer.
+
+---
+
 ## 👩‍💻 Author & Acknowledgements
 
 Developed by **Aafiya Sheerin** for the **PayPal Agentic Commerce & AI Payments Hackathon**.  
