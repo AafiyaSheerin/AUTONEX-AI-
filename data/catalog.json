@@ -1,0 +1,895 @@
+{
+  "merchant": {
+    "name": "Luma"
+  },
+  "currency": "USD",
+  "merchants": [
+    {
+      "id": "merch_01",
+      "name": "Luma Fashions",
+      "category": "Modest Luxury & Apparel",
+      "trust_rating": 4.9,
+      "verified": true
+    },
+    {
+      "id": "merch_02",
+      "name": "NovaTech Electronics",
+      "category": "Audio, Smart Tech & Computing",
+      "trust_rating": 4.8,
+      "verified": true
+    },
+    {
+      "id": "merch_03",
+      "name": "Aura Living",
+      "category": "Modern Home & Kitchen Essentials",
+      "trust_rating": 4.7,
+      "verified": true
+    },
+    {
+      "id": "merch_04",
+      "name": "GlowAura Beauty",
+      "category": "Clean Skincare & Luxury Fragrance",
+      "trust_rating": 4.9,
+      "verified": true
+    },
+    {
+      "id": "merch_05",
+      "name": "UrbanCraft Goods",
+      "category": "Handcrafted Leather & Travel Bags",
+      "trust_rating": 4.6,
+      "verified": true
+    }
+  ],
+  "products": [
+    {
+      "name": "Esme Cotton Maxi Sarong",
+      "category": "Clothes",
+      "price": 99.0,
+      "description": "Esme Cotton Maxi Sarong in brown cotton with a square silhouette and wrap-style, self-tie fastening. Draped, knot detail at the upper right, soft pleats, diagonal wrapped panel, and maxi length. Made from 100% cotton and",
+      "color": "Signature",
+      "quality": "Channel3 Verified Luxury",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\ud83d\udecd\ufe0f",
+      "tags": [],
+      "merchant": "\u00c9TERNE via modaoperandi.com",
+      "id": "prod_aa1b56f2"
+    },
+    {
+      "name": "PREMIUM HANDBAG ",
+      "category": "Handbag",
+      "price": 10.0,
+      "description": "",
+      "color": "Midnight Navy",
+      "quality": "Artisan Combed Cotton",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\ud83d\udc5c",
+      "tags": [],
+      "merchant": "AUTONEX Artisan Collective",
+      "id": "prod_df859a9a"
+    },
+    {
+      "name": "The Viridian Tile Sarong",
+      "category": "Clothes",
+      "price": 78.0,
+      "description": "The Viridian Tile Sarong is a versatile beach cover-up featuring a tropical leaf tile print in green and white. Crafted from lightweight cotton voile, this flowing garment can be styled as a skirt, dress, or scarf, makin",
+      "color": "Signature",
+      "quality": "Channel3 Verified Luxury",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\ud83d\udecd\ufe0f",
+      "tags": [],
+      "merchant": "Sunshine Tienda via andieswim.com",
+      "id": "prod_2a365aba"
+    },
+    {
+      "name": "leather handbag ",
+      "category": "Handbag",
+      "price": 100.0,
+      "description": "",
+      "color": "Midnight Navy",
+      "quality": "Artisan Combed Cotton",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\ud83d\udecd\ufe0f",
+      "tags": [],
+      "merchant": "AUTONEX Artisan Collective",
+      "id": "prod_5bc4af75"
+    },
+    {
+      "name": "Sarong With Ties",
+      "category": "Clothes",
+      "price": 145.0,
+      "description": "The SIGAL Sarong With Ties in the Tapestra print is a vibrant and versatile summer accessory designed for the modern traveler. Crafted from a smooth blend of 51% viscose and 49% cotton, this piece features a flowing drap",
+      "color": "Signature",
+      "quality": "Channel3 Verified Luxury",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\ud83d\udecd\ufe0f",
+      "tags": [],
+      "merchant": "SIGAL via shopsigal.com",
+      "id": "prod_8a41a285"
+    },
+    {
+      "name": "Akasha Silk Bandhani Sarong Dress",
+      "category": "Clothes",
+      "price": 484.0,
+      "description": "This Akasha Silk Bandhani Sarong Dress in Ocean is a one-size, rewearable statement piece crafted from luxurious 100% Bandhani Gajji silk. It features a tie-up waist to accentuate curves and an effortless drape, enhanced",
+      "color": "Signature",
+      "quality": "Channel3 Verified Luxury",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\ud83d\udecd\ufe0f",
+      "tags": [],
+      "merchant": "Society of Cloth via societyofcloth.com",
+      "id": "prod_2f028177"
+    },
+    {
+      "name": "bata shoe ",
+      "category": "footwear ",
+      "price": 12.0,
+      "description": "leather ",
+      "color": "Midnight Navy",
+      "quality": "Artisan Combed Cotton",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\ud83d\udc5f",
+      "tags": [],
+      "merchant": "Hermora Artisan Collective",
+      "id": "prod_b7379080"
+    },
+    {
+      "name": "silk saree",
+      "category": "Abaya",
+      "price": 45.0,
+      "description": "super material woven by artisan",
+      "color": "Midnight Black",
+      "quality": "Artisan Silk",
+      "delivery_days": 2,
+      "stock": 10,
+      "image_emoji": "\u2728",
+      "tags": [],
+      "merchant": "Luma Fashions",
+      "id": "prod_b58b7bb6"
+    },
+    {
+      "id": "prod_001",
+      "name": "Midnight Abaya",
+      "category": "Abaya",
+      "color": "Black",
+      "price": 42.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 7,
+      "merchant": "Luma Fashions",
+      "description": "Handcrafted Nidha fabric abaya with subtle crystal embellishments and tailored drape.",
+      "image_emoji": "\ud83d\udc57",
+      "tags": [
+        "abaya",
+        "modest",
+        "black",
+        "premium",
+        "fashion"
+      ],
+      "suggested_upsell": {
+        "name": "Premium Hijab",
+        "price": 3.5,
+        "description": "Matching chiffon silk scarf"
+      }
+    },
+    {
+      "id": "prod_002",
+      "name": "Noor Classic",
+      "category": "Abaya",
+      "color": "Black",
+      "price": 34.0,
+      "quality": "Good",
+      "delivery_days": 1,
+      "stock": 12,
+      "merchant": "Luma Fashions",
+      "description": "Breathable crepe abaya suitable for daily elegance and office wear.",
+      "image_emoji": "\ud83d\udc58",
+      "tags": [
+        "abaya",
+        "classic",
+        "black",
+        "good",
+        "fast-delivery"
+      ],
+      "suggested_upsell": {
+        "name": "Magnetic Hijab Pins Set",
+        "price": 2.5,
+        "description": "Scratch-free matte magnetic clasps"
+      }
+    },
+    {
+      "id": "prod_003",
+      "name": "Onyx Luxe",
+      "category": "Abaya",
+      "color": "Black",
+      "price": 52.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 4,
+      "merchant": "Luma Fashions",
+      "description": "High-density Japanese silk-blend abaya with embroidered satin sleeve cuffs.",
+      "image_emoji": "\u2728",
+      "tags": [
+        "abaya",
+        "luxury",
+        "black",
+        "premium",
+        "silk"
+      ],
+      "suggested_upsell": {
+        "name": "Luxury Satin Belt",
+        "price": 4.0,
+        "description": "Detachable cinched sash"
+      }
+    },
+    {
+      "id": "prod_004",
+      "name": "Everyday Black",
+      "category": "Abaya",
+      "color": "Black",
+      "price": 26.0,
+      "quality": "Good",
+      "delivery_days": 5,
+      "stock": 18,
+      "merchant": "Luma Fashions",
+      "description": "Lightweight, easy-iron matte georgette abaya with flared silhouette.",
+      "image_emoji": "\ud83e\uddf5",
+      "tags": [
+        "abaya",
+        "budget",
+        "black",
+        "daily"
+      ],
+      "suggested_upsell": {
+        "name": "Garment Travel Sleeve",
+        "price": 2.0,
+        "description": "Dust-proof zippered storage bag"
+      }
+    },
+    {
+      "id": "prod_005",
+      "name": "SonicShield Pro ANC Headphones",
+      "category": "Headphones",
+      "color": "Black",
+      "price": 42.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 15,
+      "merchant": "NovaTech Electronics",
+      "description": "Active noise cancelling wireless over-ear headphones with 45-hour battery and spatial audio.",
+      "image_emoji": "\ud83c\udfa7",
+      "tags": [
+        "headphones",
+        "audio",
+        "anc",
+        "wireless",
+        "electronics",
+        "noise cancelling"
+      ],
+      "suggested_upsell": {
+        "name": "Hard Shell Protective Travel Case",
+        "price": 3.5,
+        "description": "Shockproof EVA storage case (8.3% upsell - within policy)"
+      }
+    },
+    {
+      "id": "prod_006",
+      "name": "EchoBass Studio Wireless Earbuds",
+      "category": "Headphones",
+      "color": "White",
+      "price": 22.0,
+      "quality": "Good",
+      "delivery_days": 1,
+      "stock": 25,
+      "merchant": "NovaTech Electronics",
+      "description": "True wireless Bluetooth 5.4 earbuds with dual ENC microphones and IPX5 water resistance.",
+      "image_emoji": "\ud83c\udfb5",
+      "tags": [
+        "headphones",
+        "earbuds",
+        "earphones",
+        "wireless",
+        "audio",
+        "bluetooth"
+      ],
+      "suggested_upsell": {
+        "name": "Silicone Protective Case & Carabiner",
+        "price": 1.8,
+        "description": "Shock absorbing keychain sleeve"
+      }
+    },
+    {
+      "id": "prod_007",
+      "name": "UltraSound Budget Earphones",
+      "category": "Headphones",
+      "color": "Black",
+      "price": 7.0,
+      "quality": "Standard",
+      "delivery_days": 1,
+      "stock": 40,
+      "merchant": "NovaTech Electronics",
+      "description": "Tangle-free braided in-ear wired earphones with inline HD microphone and punchy bass.",
+      "image_emoji": "\ud83c\udf99\ufe0f",
+      "tags": [
+        "headphones",
+        "earphones",
+        "wired",
+        "cheap",
+        "budget",
+        "audio"
+      ],
+      "suggested_upsell": {
+        "name": "USB-C to 3.5mm DAC Adapter",
+        "price": 0.6,
+        "description": "Hi-Res digital audio converter cable"
+      }
+    },
+    {
+      "id": "prod_008",
+      "name": "AeroFit GPS Smartwatch",
+      "category": "Smartwatch",
+      "color": "Black",
+      "price": 33.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 14,
+      "merchant": "NovaTech Electronics",
+      "description": "1.43-inch AMOLED display smartwatch with built-in GPS, SpO2 sensor, and 12-day battery life.",
+      "image_emoji": "\u231a",
+      "tags": [
+        "smartwatch",
+        "watch",
+        "fitness",
+        "gps",
+        "electronics",
+        "wearable"
+      ],
+      "suggested_upsell": {
+        "name": "Milanese Magnetic Metal Mesh Strap",
+        "price": 2.9,
+        "description": "Stainless steel breathable wristband (8.8% upsell)"
+      }
+    },
+    {
+      "id": "prod_009",
+      "name": "FitBand Pro Tracker",
+      "category": "Smartwatch",
+      "color": "Black",
+      "price": 11.0,
+      "quality": "Good",
+      "delivery_days": 1,
+      "stock": 30,
+      "merchant": "NovaTech Electronics",
+      "description": "Sleek water-resistant fitness wristband tracking steps, heart rate, and sleep metrics.",
+      "image_emoji": "\ud83c\udfc3",
+      "tags": [
+        "smartwatch",
+        "fitness band",
+        "tracker",
+        "watch",
+        "wearable"
+      ],
+      "suggested_upsell": {
+        "name": "Replacement Sport Silicone Bands (Pack of 3)",
+        "price": 1.0,
+        "description": "Color strap pack"
+      }
+    },
+    {
+      "id": "prod_010",
+      "name": "ApexKey RGB Mechanical Keyboard",
+      "category": "Keyboard",
+      "color": "Grey",
+      "price": 35.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 10,
+      "merchant": "NovaTech Electronics",
+      "description": "Hot-swappable custom red switches, sound-dampening foam, per-key RGB backlighting.",
+      "image_emoji": "\u2328\ufe0f",
+      "tags": [
+        "keyboard",
+        "mechanical",
+        "gaming",
+        "electronics",
+        "computing"
+      ],
+      "suggested_upsell": {
+        "name": "Ergonomic Memory Foam Wrist Rest",
+        "price": 3.0,
+        "description": "Cooling-gel non-slip palm cushion"
+      }
+    },
+    {
+      "id": "prod_011",
+      "name": "StreamVision 4K Ultra Webcam",
+      "category": "Webcam",
+      "color": "Black",
+      "price": 45.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 9,
+      "merchant": "NovaTech Electronics",
+      "description": "Ultra HD 4K 60fps streaming camera with AI auto-framing and dual stereo noise-canceling mics.",
+      "image_emoji": "\ud83d\udcf9",
+      "tags": [
+        "webcam",
+        "camera",
+        "4k",
+        "streaming",
+        "electronics"
+      ],
+      "suggested_upsell": {
+        "name": "Adjustable Desktop Ring Light & Tripod",
+        "price": 8.0,
+        "description": "Dimmable 10-inch USB ring light (17.7% upsell - blocks)"
+      }
+    },
+    {
+      "id": "prod_012",
+      "name": "HyperCharge 20000mAh Power Bank",
+      "category": "Power Bank",
+      "color": "Black",
+      "price": 16.0,
+      "quality": "Good",
+      "delivery_days": 1,
+      "stock": 22,
+      "merchant": "NovaTech Electronics",
+      "description": "65W USB-C PD fast-charging portable power bank capable of charging laptops, phones, and tablets.",
+      "image_emoji": "\ud83d\udd0b",
+      "tags": [
+        "power bank",
+        "charger",
+        "battery",
+        "fast charge",
+        "electronics"
+      ],
+      "suggested_upsell": {
+        "name": "Braided 100W 3-in-1 Fast Charging Cable",
+        "price": 1.4,
+        "description": "Kevlar reinforced multi-connector lead"
+      }
+    },
+    {
+      "id": "prod_013",
+      "name": "BaristaTouch Espresso Coffee Maker",
+      "category": "Coffee Maker",
+      "color": "Silver",
+      "price": 50.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 6,
+      "merchant": "Aura Living",
+      "description": "20-bar Italian pump espresso machine with high-pressure milk frother steam wand.",
+      "image_emoji": "\u2615",
+      "tags": [
+        "coffee maker",
+        "coffee",
+        "espresso",
+        "kitchen",
+        "appliances"
+      ],
+      "suggested_upsell": {
+        "name": "Pack of 100 Organic Micro-Filtration Filters",
+        "price": 4.5,
+        "description": "Unbleached natural wood pulp filters (9.0% upsell - within policy)"
+      }
+    },
+    {
+      "id": "prod_014",
+      "name": "ThermoBoil Fast Electric Kettle",
+      "category": "Electric Kettle",
+      "color": "Silver",
+      "price": 10.0,
+      "quality": "Good",
+      "delivery_days": 1,
+      "stock": 20,
+      "merchant": "Aura Living",
+      "description": "1.8L food-grade 304 stainless steel rapid boil cordless electric kettle with auto-shutoff.",
+      "image_emoji": "\ud83e\uded6",
+      "tags": [
+        "electric kettle",
+        "kettle",
+        "kitchen",
+        "appliances",
+        "water"
+      ],
+      "suggested_upsell": {
+        "name": "Organic Descaling Cleaning Solution",
+        "price": 0.9,
+        "description": "Natural citric acid limescale remover"
+      }
+    },
+    {
+      "id": "prod_015",
+      "name": "LuminaEye Smart LED Desk Lamp",
+      "category": "Desk Lamp",
+      "color": "White",
+      "price": 18.0,
+      "quality": "Premium",
+      "delivery_days": 1,
+      "stock": 16,
+      "merchant": "Aura Living",
+      "description": "Eye-care architect desk lamp with 5 color temperatures, step-less dimming, and wireless phone charger.",
+      "image_emoji": "\ud83d\udca1",
+      "tags": [
+        "desk lamp",
+        "lamp",
+        "lighting",
+        "home",
+        "office"
+      ],
+      "suggested_upsell": {
+        "name": "Cable Management Clip Organizer Pack",
+        "price": 1.5,
+        "description": "Adhesive silicone wire guides (8.3% upsell)"
+      }
+    },
+    {
+      "id": "prod_016",
+      "name": "PureBreeze Desktop Air Purifier",
+      "category": "Air Purifier",
+      "color": "White",
+      "price": 38.0,
+      "quality": "Good",
+      "delivery_days": 2,
+      "stock": 8,
+      "merchant": "Aura Living",
+      "description": "True HEPA H13 filtration capturing 99.97% of airborne allergens, pollen, dust, and smoke odors.",
+      "image_emoji": "\ud83c\udf43",
+      "tags": [
+        "air purifier",
+        "purifier",
+        "hepa",
+        "home",
+        "clean air"
+      ],
+      "suggested_upsell": {
+        "name": "Extra Activated Carbon Replacement Filter",
+        "price": 6.5,
+        "description": "6-month extended filter cartridge (17.1% upsell - blocks)"
+      }
+    },
+    {
+      "id": "prod_017",
+      "name": "RadianceGlow 15% Vitamin C Face Serum",
+      "category": "Serum",
+      "color": "Amber",
+      "price": 9.5,
+      "quality": "Premium",
+      "delivery_days": 1,
+      "stock": 35,
+      "merchant": "GlowAura Beauty",
+      "description": "Ferulic acid & pure Vitamin C skin brightening serum reducing hyperpigmentation and boosting collagen.",
+      "image_emoji": "\u2728",
+      "tags": [
+        "serum",
+        "skincare",
+        "beauty",
+        "face",
+        "vitamin c"
+      ],
+      "suggested_upsell": {
+        "name": "Natural Rose Quartz Facial Roller",
+        "price": 3.0,
+        "description": "Lymphatic drainage massage tool (31.5% upsell - blocks)"
+      }
+    },
+    {
+      "id": "prod_018",
+      "name": "Velvet Oud Luxury Eau de Parfum 100ml",
+      "category": "Perfume",
+      "color": "Gold",
+      "price": 33.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 11,
+      "merchant": "GlowAura Beauty",
+      "description": "Rich artisanal oriental fragrance featuring smoky Cambodian agarwood, Damascus rose, and amber base notes.",
+      "image_emoji": "\ud83c\udf38",
+      "tags": [
+        "perfume",
+        "fragrance",
+        "oud",
+        "luxury",
+        "beauty"
+      ],
+      "suggested_upsell": {
+        "name": "10ml Refillable Pocket Atomizer Spray",
+        "price": 2.5,
+        "description": "Leakproof aircraft-grade aluminum travel spray (7.5% upsell)"
+      }
+    },
+    {
+      "id": "prod_019",
+      "name": "HydraPlump Hyaluronic Moisturizer",
+      "category": "Moisturizer",
+      "color": "White",
+      "price": 8.0,
+      "quality": "Good",
+      "delivery_days": 1,
+      "stock": 28,
+      "merchant": "GlowAura Beauty",
+      "description": "Multi-molecular weight hyaluronic cream delivering 72-hour deep cellular hydration without greasiness.",
+      "image_emoji": "\ud83e\uddf4",
+      "tags": [
+        "moisturizer",
+        "cream",
+        "skincare",
+        "beauty",
+        "hydrating"
+      ],
+      "suggested_upsell": {
+        "name": "Gentle Amino Acid Cleansing Foam 50ml",
+        "price": 0.7,
+        "description": "Travel size pH-balanced face wash"
+      }
+    },
+    {
+      "id": "prod_020",
+      "name": "Voyager Anti-Theft Laptop Backpack",
+      "category": "Backpack",
+      "color": "Grey",
+      "price": 29.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 18,
+      "merchant": "UrbanCraft Goods",
+      "description": "Water-resistant Oxford nylon commuter backpack with hidden TSA lock, USB pass-through, and padded 16-inch compartment.",
+      "image_emoji": "\ud83c\udf92",
+      "tags": [
+        "backpack",
+        "bag",
+        "laptop bag",
+        "travel",
+        "accessories"
+      ],
+      "suggested_upsell": {
+        "name": "Waterproof High-Visibility Rain Cover",
+        "price": 2.5,
+        "description": "Reflective elastic storm shroud (8.6% upsell - within policy)"
+      }
+    },
+    {
+      "id": "prod_021",
+      "name": "Heritage RFID Genuine Leather Wallet",
+      "category": "Wallet",
+      "color": "Brown",
+      "price": 9.5,
+      "quality": "Premium",
+      "delivery_days": 1,
+      "stock": 25,
+      "merchant": "UrbanCraft Goods",
+      "description": "Hand-stitched vegetable-tanned full grain leather bi-fold wallet with military-grade RFID blocking liner.",
+      "image_emoji": "\ud83d\udc5b",
+      "tags": [
+        "wallet",
+        "leather",
+        "accessories",
+        "rfid",
+        "mens"
+      ],
+      "suggested_upsell": {
+        "name": "Matching Leather Keychain Ring",
+        "price": 0.8,
+        "description": "Solid brass hardware key fob"
+      }
+    },
+    {
+      "id": "prod_022",
+      "name": "ApexVision Polarized Aviation Sunglasses",
+      "category": "Sunglasses",
+      "color": "Black",
+      "price": 15.0,
+      "quality": "Good",
+      "delivery_days": 2,
+      "stock": 20,
+      "merchant": "UrbanCraft Goods",
+      "description": "UV400 glare-reducing TAC polarized aviators with lightweight corrosion-resistant titanium alloy frame.",
+      "image_emoji": "\ud83d\udd76\ufe0f",
+      "tags": [
+        "sunglasses",
+        "shades",
+        "eyewear",
+        "accessories",
+        "polarized"
+      ],
+      "suggested_upsell": {
+        "name": "Microfiber Cleaning Cloth & Hard Case",
+        "price": 1.2,
+        "description": "Lens care travel kit (8.0% upsell)"
+      }
+    },
+    {
+      "id": "prod_023",
+      "name": "Emerald Velvet Evening Dress",
+      "category": "Dress",
+      "color": "Green",
+      "price": 46.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 5,
+      "merchant": "Luma Fashions",
+      "description": "Floor-length deep emerald green velvet gown with elegant cowl neckline and pleated side slit.",
+      "image_emoji": "\ud83d\udc57",
+      "tags": [
+        "dress",
+        "evening",
+        "gown",
+        "fashion",
+        "green",
+        "velvet"
+      ],
+      "suggested_upsell": {
+        "name": "Crystal Chandelier Earrings",
+        "price": 7.0,
+        "description": "Silver plated statement jewelry (15.2% upsell - blocks)"
+      }
+    },
+    {
+      "id": "prod_024",
+      "name": "Classic Leather Biker Jacket",
+      "category": "Jacket",
+      "color": "Black",
+      "price": 58.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 7,
+      "merchant": "UrbanCraft Goods",
+      "description": "Tailored genuine lambskin leather motorcycle jacket with asymmetric YKK metal zippers.",
+      "image_emoji": "\ud83e\udde5",
+      "tags": [
+        "jacket",
+        "leather jacket",
+        "biker",
+        "coat",
+        "fashion",
+        "black"
+      ],
+      "suggested_upsell": {
+        "name": "Leather Nourishing Balm Conditioner",
+        "price": 4.5,
+        "description": "Beeswax preservation wax (7.7% upsell - within policy)"
+      }
+    },
+    {
+      "id": "prod_025",
+      "name": "TitanBook Pro M3 Max Laptop",
+      "category": "Laptop",
+      "color": "Grey",
+      "price": 1299.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 3,
+      "merchant": "NovaTech Electronics",
+      "description": "Flagship 16-core workstation laptop with 64GB Unified RAM, 2TB SSD, and Liquid Retina XDR screen.",
+      "image_emoji": "\ud83d\udcbb",
+      "tags": [
+        "laptop",
+        "computer",
+        "macbook",
+        "expensive",
+        "electronics"
+      ],
+      "suggested_upsell": {
+        "name": "Thunderbolt 4 Multi-Port Docking Station",
+        "price": 120.0,
+        "description": "Dual 4K display dock (9.2% upsell)"
+      }
+    },
+    {
+      "id": "prod_026",
+      "name": "Atelier Bespoke Cashmere Overcoat",
+      "category": "Coat",
+      "color": "Brown",
+      "price": 350.0,
+      "quality": "Premium",
+      "delivery_days": 3,
+      "stock": 2,
+      "merchant": "Luma Fashions",
+      "description": "100% Mongolian Cashmere hand-tailored double-breasted trench overcoat.",
+      "image_emoji": "\ud83e\udde5",
+      "tags": [
+        "coat",
+        "overcoat",
+        "cashmere",
+        "luxury",
+        "expensive"
+      ],
+      "suggested_upsell": {
+        "name": "Silk Paisley Scarf",
+        "price": 28.0,
+        "description": "Italian silk neckerchief (8.0% upsell)"
+      }
+    },
+    {
+      "id": "prod_027",
+      "name": "Classic Linen Shirt",
+      "category": "Clothes",
+      "color": "White",
+      "price": 28.0,
+      "quality": "Good",
+      "delivery_days": 2,
+      "stock": 15,
+      "merchant": "Luma Fashions",
+      "description": "Tailored breathable pure French linen casual button-down shirt.",
+      "image_emoji": "\ud83d\udc55",
+      "tags": [
+        "clothes",
+        "shirt",
+        "linen",
+        "white",
+        "casual"
+      ]
+    },
+    {
+      "id": "prod_028",
+      "name": "Artisan Combed Cotton T-Shirt",
+      "category": "Clothes",
+      "color": "Black",
+      "price": 18.0,
+      "quality": "Good",
+      "delivery_days": 1,
+      "stock": 25,
+      "merchant": "Luma Fashions",
+      "description": "Heavyweight organic combed cotton everyday unisex crewneck t-shirt.",
+      "image_emoji": "\ud83d\udc55",
+      "tags": [
+        "clothes",
+        "tshirt",
+        "t-shirt",
+        "cotton",
+        "black",
+        "daily"
+      ]
+    },
+    {
+      "id": "prod_029",
+      "name": "Tailored Wool Blazer",
+      "category": "Clothes",
+      "color": "Navy",
+      "price": 64.0,
+      "quality": "Premium",
+      "delivery_days": 2,
+      "stock": 8,
+      "merchant": "Luma Fashions",
+      "description": "Slim-fit structured Italian wool-blend blazer for smart-casual and formal elegance.",
+      "image_emoji": "\ud83e\udde5",
+      "tags": [
+        "clothes",
+        "blazer",
+        "jacket",
+        "wool",
+        "navy",
+        "premium"
+      ]
+    },
+    {
+      "id": "prod_030",
+      "name": "Relaxed Pleated Chino Trousers",
+      "category": "Clothes",
+      "color": "Beige",
+      "price": 34.0,
+      "quality": "Good",
+      "delivery_days": 2,
+      "stock": 12,
+      "merchant": "Luma Fashions",
+      "description": "Comfort-stretch tapered pleated casual trousers in sandstone beige.",
+      "image_emoji": "\ud83d\udc56",
+      "tags": [
+        "clothes",
+        "pants",
+        "trousers",
+        "chinos",
+        "beige",
+        "casual"
+      ]
+    }
+  ]
+}

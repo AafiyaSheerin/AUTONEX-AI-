@@ -1,0 +1,543 @@
+/* =========================================================================
+   PURCHASE CALENDAR & ORDER HISTORY MODAL
+   Bright porcelain luxury theme with high-contrast visible dark typography.
+   ========================================================================= */
+
+/* Backdrop Overlay */
+.purchase-calendar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 14, 30, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: pcalFadeIn 0.2s ease-out;
+}
+
+@keyframes pcalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Window (90vw x 82vh) */
+.purchase-calendar-dialog {
+  width: 90vw;
+  max-width: 1280px;
+  height: 82vh;
+  min-height: 600px;
+  background: #FAF8FD;
+  border: 1px solid rgba(91, 75, 138, 0.28);
+  border-radius: 22px;
+  box-shadow: 0 25px 65px rgba(22, 17, 36, 0.55);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #181226;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  animation: pcalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pcalSlideUp {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Modal Header Bar */
+.purchase-calendar-header {
+  padding: 18px 26px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #ECE7F4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.purchase-calendar-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.purchase-calendar-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: #181226;
+  letter-spacing: -0.02em;
+}
+
+.purchase-calendar-subtitle {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #5B526D;
+  font-weight: 500;
+}
+
+.purchase-calendar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Ordered Date Header Badge */
+.purchase-calendar-counter-badge {
+  background: #EFE9FA;
+  border: 1px solid #D5C9EB;
+  color: #3B2A63;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.purchase-calendar-counter-badge .counter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6B559C;
+}
+
+/* Close Button (X) */
+.purchase-calendar-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #D6CEE5;
+  background: #FAF8FD;
+  color: #382C52;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.purchase-calendar-close-btn:hover {
+  background: #EFE9FA;
+  color: #181226;
+  border-color: #5B4B8A;
+}
+
+/* Responsive View Switcher for Small Screens (< 900px) */
+.purchase-calendar-mobile-nav {
+  display: none;
+  background: #EFE9FA;
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+}
+
+.purchase-calendar-mobile-btn {
+  flex: 1;
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: #544A6C;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.purchase-calendar-mobile-btn.active {
+  background: #FFFFFF;
+  color: #181226;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Split Body (35% Left / 65% Right) */
+.purchase-calendar-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  height: calc(82vh - 80px);
+}
+
+/* =========================================================================
+   LEFT PANEL: ORDER HISTORY (35%)
+   ========================================================================= */
+.order-history-panel {
+  width: 35%;
+  min-width: 320px;
+  max-width: 440px;
+  background: #FDFBF9;
+  border-right: 1px solid #ECE7F4;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.order-history-panel-header {
+  padding: 14px 20px;
+  background: #F8F5FC;
+  border-bottom: 1px solid #ECE7F4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-history-panel-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #4A3C6E;
+  font-family: 'Outfit', sans-serif;
+}
+
+.order-history-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Individual Order Card */
+.order-history-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E0F0;
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(36, 31, 58, 0.04);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.order-history-card:hover {
+  border-color: #9A8BB8;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(91, 75, 138, 0.1);
+}
+
+.order-history-card.selected {
+  background: #F4EFFE;
+  border: 2px solid #5B4B8A;
+  box-shadow: 0 6px 18px rgba(91, 75, 138, 0.16);
+}
+
+/* Product Image (64x64px) */
+.order-card-img-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: #F3EEFA;
+  border: 1px solid #E2DCEE;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.order-card-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-card-product-name {
+  margin: 0;
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: #181226;
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.25;
+}
+
+/* Clean Order ID badge sent to merchant */
+.order-card-id-pill {
+  display: inline-flex;
+  align-items: center;
+  background: #EFE9FA;
+  border: 1px solid #D5C9EB;
+  color: #4A3670;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  margin-right: 6px;
+}
+
+.order-card-meta-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.order-card-merchant {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4F4665;
+}
+
+.order-card-amount {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #5B4B8A;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Real Delivery Address */
+.order-card-address {
+  margin-top: 3px;
+  font-size: 0.76rem;
+  color: #615975;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  line-height: 1.3;
+}
+
+/* Delivery Date ALONE */
+.order-card-delivery-date {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #047857;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* =========================================================================
+   RIGHT PANEL: BRYNTUM CALENDAR (65%)
+   ========================================================================= */
+.calendar-panel {
+  flex: 1;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.calendar-panel-header {
+  padding: 14px 22px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #ECE7F4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-panel-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #4A3C6E;
+  font-family: 'Outfit', sans-serif;
+}
+
+.calendar-panel-hint {
+  font-size: 0.76rem;
+  color: #7A728A;
+  font-weight: 500;
+}
+
+.bryntum-buyer-calendar-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Bryntum Calendar Overrides for Clean Amount-Only Badges */
+.bryntum-buyer-calendar-container .b-calendar-cell {
+  background: #FFFFFF !important;
+  transition: all 0.2s ease !important;
+}
+
+.bryntum-buyer-calendar-container .b-monthview-day-number {
+  color: #181226 !important;
+  font-weight: 700 !important;
+}
+
+/* Selected Order Date Highlight */
+.bryntum-buyer-calendar-container .b-calendar-cell.b-selected-order-date,
+.bryntum-buyer-calendar-container [data-date].b-selected-order-date {
+  background: #F4EFFF !important;
+  box-shadow: inset 0 0 0 2.5px #6B559C !important;
+  border-radius: 8px !important;
+}
+
+.bryntum-buyer-calendar-container .b-calendar-cell.b-selected-order-date .b-monthview-day-number,
+.bryntum-buyer-calendar-container [data-date].b-selected-order-date .b-monthview-day-number {
+  color: #FFFFFF !important;
+  background: #6B559C !important;
+  border-radius: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+  line-height: 24px !important;
+  text-align: center !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 6px rgba(107, 85, 156, 0.45) !important;
+}
+
+/* Event Pill Text: Prominent amount visible on purple badge */
+.bryntum-buyer-calendar-container .b-cal-event-desc,
+.bryntum-buyer-calendar-container .b-cal-event-name,
+.bryntum-buyer-calendar-container .b-event-name {
+  display: block !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  font-size: 0.8rem !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Amount Badge on Calendar */
+.bryntum-buyer-calendar-container .b-cal-event {
+  background: linear-gradient(135deg, #6B559C 0%, #513E7D 100%) !important;
+  color: #FFFFFF !important;
+  border-radius: 6px !important;
+  font-weight: 800 !important;
+  font-size: 0.78rem !important;
+  box-shadow: 0 2px 6px rgba(81, 62, 125, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 3px 6px !important;
+}
+
+/* Loading & Empty States */
+.pcal-state-center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.pcal-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #EFE9FA;
+  border-top-color: #5B4B8A;
+  border-radius: 50%;
+  animation: pcalSpin 0.7s linear infinite;
+}
+
+@keyframes pcalSpin {
+  to { transform: rotate(360deg); }
+}
+
+.pcal-empty-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #716886;
+  margin: 0;
+}
+
+.pcal-retry-btn {
+  background: #5B4B8A;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pcal-retry-btn:hover {
+  background: #4A3B73;
+}
+
+/* =========================================================================
+   TRIGGER BUTTON ON BUYER AGENTVAULT PAGE
+   ========================================================================= */
+.purchase-history-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FAF8FD;
+  border: 1px solid rgba(91, 75, 138, 0.35);
+  color: #382C52;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(36, 31, 58, 0.05);
+}
+
+.purchase-history-trigger-btn:hover {
+  background: #EFE9FA;
+  color: #181226;
+  border-color: #5B4B8A;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(91, 75, 138, 0.15);
+}
+
+/* Responsive Rules (< 900px) */
+@media (max-width: 900px) {
+  .purchase-calendar-dialog {
+    width: 95vw;
+    height: 90vh;
+  }
+  .purchase-calendar-mobile-nav {
+    display: flex;
+  }
+  .purchase-calendar-body {
+    flex-direction: column;
+  }
+  .order-history-panel {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    display: none;
+  }
+  .order-history-panel.mobile-visible {
+    display: flex;
+  }
+  .calendar-panel {
+    display: none;
+  }
+  .calendar-panel.mobile-visible {
+    display: flex;
+  }
+}
+

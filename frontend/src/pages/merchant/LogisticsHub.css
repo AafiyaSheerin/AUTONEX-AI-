@@ -1,0 +1,258 @@
+/* LogisticsHub.css - Real Bryntum Styling for Merchant Fulfilment */
+.logistics-hub-root {
+  background: #241F3A;
+  border: 1px solid rgba(205, 189, 235, 0.35);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 18px 45px rgba(18, 14, 30, 0.5);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: #F5F0FF;
+}
+
+.logistics-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.logistics-title {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+}
+
+.logistics-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #B8B0CC;
+}
+
+.logistics-branding-tag {
+  font-size: 0.74rem;
+  color: #CDBDEB;
+  background: rgba(205, 189, 235, 0.15);
+  border: 1px solid rgba(205, 189, 235, 0.3);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.logistics-tabs-cluster {
+  display: flex;
+  background: #1B162E;
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid rgba(205, 189, 235, 0.25);
+  gap: 4px;
+}
+
+.logistics-tab-btn {
+  background: transparent;
+  color: #B8B0CC;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.logistics-tab-btn.active {
+  background: linear-gradient(135deg, #7C5CB7 0%, #5B4B8A 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(91, 75, 138, 0.35);
+}
+
+.order-selector-card {
+  background: #1B162E;
+  border: 1px solid rgba(205, 189, 235, 0.25);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.order-selector-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.order-dropdown-select {
+  background: #241F3A;
+  border: 1px solid rgba(205, 189, 235, 0.35);
+  color: #F5F0FF;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.delay-action-btn {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.delay-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.45);
+}
+
+.order-meta-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.meta-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tag-agent {
+  background: rgba(167, 139, 250, 0.2);
+  color: #CDBDEB;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+}
+
+.tag-paypal {
+  background: rgba(56, 189, 248, 0.2);
+  color: #BAE6FD;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.tag-policy {
+  background: rgba(52, 211, 153, 0.2);
+  color: #A7F3D0;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.order-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(205, 189, 235, 0.15);
+  font-size: 0.82rem;
+}
+
+.detail-label {
+  color: #B8B0CC;
+  display: block;
+  font-size: 0.74rem;
+  margin-bottom: 2px;
+}
+
+.detail-val {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  margin-left: 8px;
+}
+
+.status-prep {
+  background: rgba(251, 191, 36, 0.2);
+  color: #FCD34D;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.status-transit {
+  background: rgba(56, 189, 248, 0.2);
+  color: #BAE6FD;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.status-delivered {
+  background: rgba(52, 211, 153, 0.2);
+  color: #A7F3D0;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.policy-banner {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeInBanner 0.25s ease-out;
+}
+
+.policy-banner.allowed {
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid #34D399;
+  color: #D1FAE5;
+}
+
+.policy-banner.needs-approval {
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid #F59E0B;
+  color: #FEF3C7;
+}
+
+.policy-banner.blocked {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #EF4444;
+  color: #FEE2E2;
+}
+
+@keyframes fadeInBanner {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bryntum-wrapper-container {
+  height: 380px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(205, 189, 235, 0.25);
+  background: #ffffff;
+}
+
+.bryntum-wrapper-container .b-gantt,
+.bryntum-wrapper-container .b-scheduler {
+  height: 100%;
+  width: 100%;
+}
+

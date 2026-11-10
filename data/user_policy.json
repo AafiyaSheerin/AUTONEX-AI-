@@ -1,0 +1,13 @@
+{
+  "currency": "USD",
+  "monthly_allowance_usd": 500.0,
+  "autonomous_spend_limit_usd": 25.0,
+  "approval_limit_usd": 500.0,
+  "autonomous_spend_limit": 25.0,
+  "approval_limit": 500.0,
+  "max_upsell_percentage": 10,
+  "require_biometric_face_id": true,
+  "biometric_locked": true,
+  "require_approval_for_unknown_merchant": true,
+  "monthly_allowance": 500.0
+}

@@ -1,0 +1,315 @@
+{
+  "demo@hermora.com": {
+    "id": "usr_001",
+    "email": "demo@hermora.com",
+    "name": "Aafiya Sheerin",
+    "password": "hermora123",
+    "monthly_allowance": 500.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": false,
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=Aafiya",
+    "autonomous_limit": 15.0,
+    "biometric_locked": false,
+    "face_id_locked": false,
+    "passkey_locked": false,
+    "security_pin": "2006",
+    "shipping_address": {
+      "recipient_name": "Aafiya Sheerin (Atelier DIFC)",
+      "phone": "+971 50 987 6543",
+      "street": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+      "city": "Dubai Marina",
+      "country": "UAE"
+    },
+    "last_cycle_month": "2026-11",
+    "last_revived_at": "2026-11-08T09:54:52.679229+00:00",
+    "saved_addresses": [
+      {
+        "id": "addr_01",
+        "name": "Aafiya Sheerin",
+        "phone": "+971 50 123 4567",
+        "full_address": "42 Luxury Promenade, Suite 4B",
+        "is_default": false
+      },
+      {
+        "id": "addr_02",
+        "name": "Aafiya Sheerin (Atelier DIFC)",
+        "phone": "+971 50 987 6543",
+        "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+        "is_default": true
+      }
+    ],
+    "role": "client"
+  },
+  "dual_lock_test@hermora.com": {
+    "id": "usr_1c569053",
+    "email": "dual_lock_test@hermora.com",
+    "name": "Dual Lock Tester",
+    "password": "demopassword123",
+    "monthly_allowance": 150.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": true,
+    "biometric_locked": true,
+    "face_id_locked": true,
+    "passkey_locked": true,
+    "security_pin": "1234",
+    "face_template_id": "FACE_TMPL_3C7532A7",
+    "face_biometric_vector": [
+      0.46,
+      0.38,
+      0.32,
+      1.34,
+      0.88,
+      0.72,
+      0.98,
+      0.05
+    ],
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=DualLockTester",
+    "saved_addresses": [
+      {
+        "id": "addr_01",
+        "name": "Dual Lock Tester",
+        "phone": "+971 50 123 4567",
+        "full_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE",
+        "is_default": true
+      },
+      {
+        "id": "addr_02",
+        "name": "Dual Lock Tester (Atelier DIFC)",
+        "phone": "+971 50 987 6543",
+        "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+        "is_default": false
+      }
+    ]
+  },
+  "passkey_guard_test@hermora.com": {
+    "id": "usr_14bb9034",
+    "email": "passkey_guard_test@hermora.com",
+    "name": "Hermora User",
+    "password": "demopassword123",
+    "monthly_allowance": 150.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": true,
+    "biometric_locked": true,
+    "face_id_locked": true,
+    "passkey_locked": true,
+    "security_pin": "1234",
+    "face_template_id": "FACE_TMPL_37CE6476",
+    "face_biometric_vector": [
+      0.46,
+      0.38,
+      0.32,
+      1.34,
+      0.88,
+      0.72,
+      0.98,
+      0.05
+    ],
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=User",
+    "saved_addresses": [
+      {
+        "id": "addr_01",
+        "name": "Hermora User",
+        "phone": "+971 50 123 4567",
+        "full_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE",
+        "is_default": true
+      },
+      {
+        "id": "addr_02",
+        "name": "Hermora User (Atelier DIFC)",
+        "phone": "+971 50 987 6543",
+        "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+        "is_default": false
+      }
+    ]
+  },
+  "payment_pin_test@hermora.com": {
+    "id": "usr_9a1ddbec",
+    "email": "payment_pin_test@hermora.com",
+    "name": "Hermora User",
+    "password": "demopassword123",
+    "monthly_allowance": 150.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": true,
+    "biometric_locked": true,
+    "face_id_locked": true,
+    "passkey_locked": true,
+    "security_pin": "5678",
+    "face_template_id": "FACE_TMPL_0A14CF8B",
+    "face_biometric_vector": [
+      0.46,
+      0.38,
+      0.32,
+      1.34,
+      0.88,
+      0.72,
+      0.98,
+      0.05
+    ],
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=User",
+    "last_cycle_month": "2026-11",
+    "last_revived_at": "2026-11-08T10:13:30.686360+00:00",
+    "saved_addresses": [
+      {
+        "id": "addr_01",
+        "name": "Hermora User",
+        "phone": "+971 50 123 4567",
+        "full_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE",
+        "is_default": true
+      },
+      {
+        "id": "addr_02",
+        "name": "Hermora User (Atelier DIFC)",
+        "phone": "+971 50 987 6543",
+        "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+        "is_default": false
+      }
+    ]
+  },
+  "verify_pin_test@hermora.com": {
+    "id": "usr_1fb26bae",
+    "email": "verify_pin_test@hermora.com",
+    "name": "Hermora User",
+    "password": "demopassword123",
+    "monthly_allowance": 150.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": true,
+    "biometric_locked": true,
+    "face_id_locked": true,
+    "passkey_locked": true,
+    "security_pin": "9999",
+    "face_template_id": "FACE_TMPL_AFC6243E",
+    "face_biometric_vector": [
+      0.46,
+      0.38,
+      0.32,
+      1.34,
+      0.88,
+      0.72,
+      0.98,
+      0.05
+    ],
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=User",
+    "last_cycle_month": "2026-11",
+    "last_revived_at": "2026-11-08T10:13:32.866236+00:00",
+    "saved_addresses": [
+      {
+        "id": "addr_01",
+        "name": "Hermora User",
+        "phone": "+971 50 123 4567",
+        "full_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE",
+        "is_default": true
+      },
+      {
+        "id": "addr_02",
+        "name": "Hermora User (Atelier DIFC)",
+        "phone": "+971 50 987 6543",
+        "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+        "is_default": false
+      }
+    ]
+  },
+  "pin_update_test@hermora.com": {
+    "id": "usr_2c9c9261",
+    "email": "pin_update_test@hermora.com",
+    "name": "Hermora User",
+    "password": "demopassword123",
+    "monthly_allowance": 150.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": true,
+    "biometric_locked": false,
+    "face_id_locked": false,
+    "passkey_locked": false,
+    "security_pin": "4321",
+    "face_template_id": "FACE_TMPL_DF238DB5",
+    "face_biometric_vector": [
+      0.46,
+      0.38,
+      0.32,
+      1.34,
+      0.88,
+      0.72,
+      0.98,
+      0.05
+    ],
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=User",
+    "last_cycle_month": "2026-11",
+    "last_revived_at": "2026-11-08T10:13:33.850853+00:00",
+    "saved_addresses": [
+      {
+        "id": "addr_01",
+        "name": "Hermora User",
+        "phone": "+971 50 123 4567",
+        "full_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE",
+        "is_default": true
+      },
+      {
+        "id": "addr_02",
+        "name": "Hermora User (Atelier DIFC)",
+        "phone": "+971 50 987 6543",
+        "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+        "is_default": false
+      }
+    ]
+  },
+  "aafiyasheerin16@gmail.com": {
+    "id": "usr_e3187163",
+    "email": "aafiyasheerin16@gmail.com",
+    "name": "aafiya",
+    "password": "tamil99",
+    "monthly_allowance": 150.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": true,
+    "biometric_locked": true,
+    "face_template_id": "FACE_TMPL_652E128E",
+    "face_biometric_vector": [
+      0.46,
+      0.38,
+      0.32,
+      1.34,
+      0.88,
+      0.72,
+      0.98,
+      0.05
+    ],
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=aafiya",
+    "last_cycle_month": "2026-11",
+    "last_revived_at": "2026-11-08T09:56:11.939795+00:00",
+    "saved_addresses": [
+      {
+        "id": "addr_01",
+        "name": "aafiya",
+        "phone": "+971 50 123 4567",
+        "full_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE",
+        "is_default": true
+      },
+      {
+        "id": "addr_02",
+        "name": "aafiya (Atelier DIFC)",
+        "phone": "+971 50 987 6543",
+        "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
+        "is_default": false
+      }
+    ]
+  },
+  "merchant@hermora.com": {
+    "id": "usr_merchant_001",
+    "email": "merchant@hermora.com",
+    "name": "Hermora Artisan Collective (Merchant Admin)",
+    "password": "merchant123",
+    "role": "merchant",
+    "monthly_allowance": 0.0,
+    "autonomous_limit": 0.0,
+    "monthly_spent": 0.0,
+    "security_pin": "2007",
+    "merchant_name": "Hermora Artisan Collective & Dubai Ateliers",
+    "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=HermoraMerchant",
+    "last_cycle_month": "2026-11",
+    "last_revived_at": "2026-11-09T20:03:11.052914+00:00"
+  }
+}

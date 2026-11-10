@@ -1,0 +1,283 @@
+{
+  "info": {
+    "_postman_id": "hermora-paypal-ai-agent-v2",
+    "name": "Hermora: Agentic Commerce, Biometric Security & PayPal Sandbox API",
+    "description": "Official PayPal Hackathon API Collection for Hermora / AegisCart AI. Demonstrates autonomous AI shopping missions, optical Face ID passkey limits, PIN verification, PayPal Sandbox capture, Merchant AG Grid operations, and Sponsor Integrations (Elastic, Zapier, Channel3).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. System & Configuration",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Get System & PayPal Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/config",
+              "host": ["{{base_url}}"],
+              "path": ["config"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Agentic Commerce Missions",
+      "item": [
+        {
+          "name": "Start AI Shopping Checkout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.transaction && jsonData.transaction.transaction_id) {",
+                  "    pm.environment.set('transaction_id', jsonData.transaction.transaction_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_request\": \"Find me a Midnight Abaya under $50 delivered within 3 days\",\n  \"user_email\": \"demo@hermora.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["checkout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Biometrics, Dual-Lock & PIN Verification",
+      "item": [
+        {
+          "name": "Lock Spend Limit with Real-Time Face ID",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_email\": \"demo@hermora.com\",\n  \"monthly_allowance\": 500.0,\n  \"autonomous_limit\": 25.0,\n  \"liveness_score\": 0.994,\n  \"biometric_hash\": \"FACE_ID_POSTMAN_TEST\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/biometrics/lock-limit",
+              "host": ["{{base_url}}"],
+              "path": ["biometrics", "lock-limit"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Dual-Lock (Face ID + Passkeys)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@hermora.com\",\n  \"face_id_locked\": true,\n  \"passkey_locked\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/security/toggle-locks",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "security", "toggle-locks"]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment Security PIN",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"demo@hermora.com\",\n  \"pin\": \"1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/pin/verify",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "pin", "verify"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. PayPal Sandbox Payment Gateway",
+      "item": [
+        {
+          "name": "Create PayPal Order (PIN-Authorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.order_id) {",
+                  "    pm.environment.set('paypal_order_id', jsonData.order_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction_id\": \"{{transaction_id}}\",\n  \"security_pin\": \"1234\",\n  \"user_email\": \"demo@hermora.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/create",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "create"]
+            }
+          }
+        },
+        {
+          "name": "Verify & Capture PayPal Sandbox Payment",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction_id\": \"{{transaction_id}}\",\n  \"order_id\": \"{{paypal_order_id}}\",\n  \"security_pin\": \"1234\",\n  \"user_email\": \"demo@hermora.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/verify",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "verify"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Merchant Operations (AG Grid Feed)",
+      "item": [
+        {
+          "name": "Get Merchant Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/merchant/metrics",
+              "host": ["{{base_url}}"],
+              "path": ["merchant", "metrics"]
+            }
+          }
+        },
+        {
+          "name": "Get Merchant Transactions (AG Grid Data Source)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/merchant/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["merchant", "transactions"]
+            }
+          }
+        },
+        {
+          "name": "Merchant Add New Product",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Emerald Silk Kimono Abaya\",\n  \"category\": \"Abaya\",\n  \"price\": 74.0,\n  \"color\": \"Emerald Green\",\n  \"quality\": \"Artisan Masterpiece\",\n  \"delivery_days\": 2,\n  \"stock\": 5,\n  \"merchant\": \"Luma Fashions\",\n  \"description\": \"Pure crepe silk with gold zardozi piping.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/merchant/products",
+              "host": ["{{base_url}}"],
+              "path": ["merchant", "products"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Hackathon Sponsor Integrations",
+      "item": [
+        {
+          "name": "Elastic: Full-Text Product Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/elastic/search?q=abaya",
+              "host": ["{{base_url}}"],
+              "path": ["elastic", "search"],
+              "query": [{"key": "q", "value": "abaya"}]
+            }
+          }
+        },
+        {
+          "name": "Elastic: Security Audit Logs & Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/elastic/status",
+              "host": ["{{base_url}}"],
+              "path": ["elastic", "status"]
+            }
+          }
+        },
+        {
+          "name": "Zapier: Test Automated Webhook Dispatch",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"webhook_url\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/zapier/test-webhook",
+              "host": ["{{base_url}}"],
+              "path": ["zapier", "test-webhook"]
+            }
+          }
+        },
+        {
+          "name": "Channel3: Multi-Merchant Product Discovery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/channel3/discover?q=scarf",
+              "host": ["{{base_url}}"],
+              "path": ["channel3", "discover"],
+              "query": [{"key": "q", "value": "scarf"}]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

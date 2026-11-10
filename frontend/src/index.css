@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* =========================================================================
+     HERMORA "PASTEL LUXE STUDIO" DESIGN SYSTEM TOKENS
+     Soft, premium, playful modern 3D boutique aesthetic
+     ========================================================================= */
+
+  /* Primary Palette */
+  --color-cream: #FFF9F2;       /* Page background */
+  --color-lavender: #CDBDEB;    /* Soft fills, chips, selected states */
+  --color-sage: #CFE3D4;        /* Success and secondary buttons */
+  --color-blush: #F4D5D9;       /* Banners, highlights */
+  --color-violet: #5B4B8A;      /* Primary buttons, links, focus ring */
+  --color-plum-night: #241F3A;  /* Dark twilight surfaces */
+  --color-charcoal: #393641;    /* All body text and text on pastel fills */
+  --color-deep-rose: #A84E5B;   /* Sale and price accents */
+  --color-text-on-dark: #F5F0FF; /* Text on dark plum night surfaces */
+  --color-text-on-dark-muted: #B8B0CC;
+
+  /* Status Badges */
+  --status-allowed-bg: #CFE3D4;
+  --status-allowed-text: #1F4A2E;
+  --status-approval-bg: #F7E3B0;
+  --status-approval-text: #5C3B00;
+  --status-blocked-bg: #F4D5D9;
+  --status-blocked-text: #7A2230;
+  --status-pending-bg: #E7E0EA;
+  --status-pending-text: #393641;
+
+  /* Aliased / Mapped Tokens to ensure automatic, seamless recoloring */
+  --color-graphite: #241F3A;
+  --color-deep-ocean: #2E284A;
+  --color-primary-teal: #5B4B8A;
+  --color-aqua: #5B4B8A;
+  --color-porcelain: #FFF9F2;
+  --color-soft-white: #FFFFFF;
+  --color-mist: #CDBDEB;
+  --color-mint: #CFE3D4;
+  --color-champagne: #F4D5D9;
+  --color-champagne-gold: #F7E3B0;
+
+  --color-text-main: #393641;
+  --color-text-secondary: #5F5B6B;
+  --color-text-muted: #858094;
+
+  /* Borders & Surfaces */
+  --color-border: #E8DFD8;
+  --color-border-subtle: rgba(57, 54, 65, 0.08);
+  --color-border-hover: rgba(91, 75, 138, 0.35);
+
+  --color-dark-bg: #1B172C;
+  --color-dark-surface: #241F3A;
+  --color-dark-surface-elevated: #2D2748;
+  --color-dark-card: rgba(36, 31, 58, 0.92);
+  --color-dark-border: rgba(205, 189, 235, 0.22);
+  --color-dark-border-hover: rgba(205, 189, 235, 0.45);
+
+  /* Gradients System */
+  --grad-primary-brand: linear-gradient(120deg, #5B4B8A 0%, #7663A8 50%, #CDBDEB 100%);
+  --grad-hero-aurora: radial-gradient(circle at 15% 15%, rgba(205, 189, 235, 0.45) 0%, transparent 50%),
+                      radial-gradient(circle at 85% 20%, rgba(244, 213, 217, 0.45) 0%, transparent 50%),
+                      radial-gradient(circle at 50% 85%, rgba(207, 227, 212, 0.35) 0%, transparent 60%),
+                      #FFF9F2;
+  --grad-deep-ocean: linear-gradient(135deg, #241F3A 0%, #302A4A 50%, #3D355C 100%);
+  --grad-soft-aqua: linear-gradient(135deg, #FFF9F2 0%, #F5ECF7 50%, #FFFFFF 100%);
+  --grad-champagne: linear-gradient(135deg, #FFF5F6 0%, #F4D5D9 50%, #FFFFFF 100%);
+  --grad-mint: linear-gradient(135deg, #F0F7F2 0%, #CFE3D4 50%, #FFFFFF 100%);
+
+  /* Typography Scales */
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 2px 6px -1px rgba(57, 54, 65, 0.05), 0 1px 3px -1px rgba(57, 54, 65, 0.03);
+  --shadow-md: 0 10px 25px -4px rgba(91, 75, 138, 0.08), 0 4px 10px -2px rgba(57, 54, 65, 0.04);
+  --shadow-lg: 0 20px 40px -8px rgba(91, 75, 138, 0.12), 0 6px 16px -3px rgba(57, 54, 65, 0.05);
+  --shadow-xl: 0 30px 60px -12px rgba(36, 31, 58, 0.22), 0 12px 24px -6px rgba(57, 54, 65, 0.08);
+  --shadow-pastel-glow: 0 0 24px rgba(205, 189, 235, 0.45);
+  --shadow-dark-card: 0 25px 50px -12px rgba(10, 8, 18, 0.75), 0 0 0 1px rgba(205, 189, 235, 0.15);
+
+  /* Border Radii */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+  --radius-full: 9999px;
+
+  /* Smooth Transition Easings */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --trans-fast: 0.15s var(--ease-smooth);
+  --trans-normal: 0.25s var(--ease-smooth);
+  --trans-slow: 0.4s var(--ease-spring);
+
+  color-scheme: light;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  background-image: var(--grad-hero-aurora);
+  background-attachment: fixed;
+  color: var(--color-charcoal);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom 3D perspective setup */
+.perspective-container {
+  perspective: 900px;
+  perspective-origin: center center;
+}
+
+/* 3D tilt card */
+.card-3d-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.card-3d-tilt:hover {
+  box-shadow: 0 20px 40px -10px rgba(91, 75, 138, 0.18), 0 8px 16px -4px rgba(57, 54, 65, 0.08);
+}
+
+.card-3d-layer {
+  transform: translateZ(24px);
+  transform-style: preserve-3d;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-violet) !important;
+  outline-offset: 2px !important;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(57, 54, 65, 0.04);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-lavender);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-violet);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-lavender);
+  color: var(--color-plum-night);
+}
+
+/* Screen Transitions */
+.page-3d-transition {
+  animation: page3DIn 0.25s var(--ease-spring) forwards;
+}
+
+@keyframes page3DIn {
+  from {
+    opacity: 0;
+    transform: rotateY(5deg) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .card-3d-tilt {
+    transform: none !important;
+  }
+}
