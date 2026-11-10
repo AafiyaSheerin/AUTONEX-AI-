@@ -319,7 +319,7 @@ export default function MerchantDashboard({ onSwitchToClient: _onSwitchToClient,
       width: 220,
       valueGetter: (params) => {
         const d = params.data.delivery_destination;
-        if (!d) return "42 Luxury Promenade, Suite 4B, Dubai Marina, UAE";
+        if (!d) return "";
         if (typeof d === "object") return d.full_address || d.street || d.name || "";
         return String(d);
       },

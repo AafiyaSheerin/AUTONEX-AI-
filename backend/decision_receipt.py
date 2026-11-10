@@ -6,12 +6,13 @@ def generate_decision_receipt(transaction):
     user = get_user_by_email(user_email)
     user_limit = user.get("monthly_allowance", 200.0) if user else 200.0
 
-    shipping = transaction.get("shipping_address") or (user.get("shipping_address") if user else None) or {
-        "recipient_name": user.get("name", "Aafiya Sheerin") if user else "Aafiya Sheerin",
-        "street": "42 Luxury Promenade, Suite 4B",
-        "city": "Dubai Marina",
-        "country": "United Arab Emirates",
-        "phone": "+971 50 123 4567"
+    u_fallback = user_email.split("@")[0].replace(".", " ").title()
+    shipping = transaction.get("delivery_destination") or transaction.get("shipping_address") or (user.get("shipping_address") if user else None) or {
+        "recipient_name": (user.get("name") if user else None) or u_fallback,
+        "street": "Standard Delivery Address",
+        "city": "Delivery Hub",
+        "country": "India",
+        "phone": "+91 9790854949"
     }
 
     receipt = {

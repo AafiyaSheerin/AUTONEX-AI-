@@ -18,6 +18,8 @@ export default function PayPalButton({
     !transaction?.pin_verified
   );
 
+  const userFallbackName = user?.name || user?.email?.split("@")?.[0]?.replace(".", " ") || "Valued Client";
+
   const [showPinModal, setShowPinModal] = useState(false);
   const [enteredPin, setEnteredPin] = useState("");
   const [pinError, setPinError] = useState("");
@@ -114,11 +116,11 @@ export default function PayPalButton({
                     user_email: user?.email || "demo@hermora.com",
                     security_pin: verifiedPin || undefined,
                     delivery_destination: selectedAddress || {
-                      name: user?.shipping_address?.recipient_name || user?.name || "Aafiya Sheerin",
-                      phone: user?.shipping_address?.phone || "+971 50 123 4567",
-                      full_address: deliveryAddress || user?.shipping_address?.street || "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE"
+                      name: user?.shipping_address?.recipient_name || userFallbackName,
+                      phone: user?.shipping_address?.phone || "+91 9790854949",
+                      full_address: deliveryAddress || user?.shipping_address?.street || "Standard Delivery Address"
                     },
-                    buyer_name: selectedAddress?.name || user?.shipping_address?.recipient_name || user?.name || "Aafiya Sheerin"
+                    buyer_name: selectedAddress?.name || user?.shipping_address?.recipient_name || userFallbackName
                   })
                 });
                 const verifyData = await res.json();
@@ -172,11 +174,11 @@ export default function PayPalButton({
           user_email: user?.email || "demo@hermora.com",
           security_pin: pinToUse,
           delivery_destination: selectedAddress || {
-            name: user?.shipping_address?.recipient_name || user?.name || "Aafiya Sheerin",
-            phone: user?.shipping_address?.phone || "+971 50 123 4567",
-            full_address: deliveryAddress || user?.shipping_address?.street || "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE"
+            name: user?.shipping_address?.recipient_name || userFallbackName,
+            phone: user?.shipping_address?.phone || "+91 9790854949",
+            full_address: deliveryAddress || user?.shipping_address?.street || "Standard Delivery Address"
           },
-          buyer_name: selectedAddress?.name || user?.shipping_address?.recipient_name || user?.name || "Aafiya Sheerin"
+          buyer_name: selectedAddress?.name || user?.shipping_address?.recipient_name || userFallbackName
         })
       });
       const verifyData = await verifyRes.json();
@@ -231,11 +233,11 @@ export default function PayPalButton({
           user_email: user?.email || "demo@hermora.com",
           security_pin: verifiedPin || undefined,
           delivery_destination: selectedAddress || {
-            name: user?.shipping_address?.recipient_name || user?.name || "Aafiya Sheerin",
-            phone: user?.shipping_address?.phone || "+971 50 123 4567",
-            full_address: deliveryAddress || user?.shipping_address?.street || "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE"
+            name: user?.shipping_address?.recipient_name || userFallbackName,
+            phone: user?.shipping_address?.phone || "+91 9790854949",
+            full_address: deliveryAddress || user?.shipping_address?.street || "Standard Delivery Address"
           },
-          buyer_name: selectedAddress?.name || user?.shipping_address?.recipient_name || user?.name || "Aafiya Sheerin"
+          buyer_name: selectedAddress?.name || user?.shipping_address?.recipient_name || userFallbackName
         })
       });
       const verifyData = await verifyRes.json();

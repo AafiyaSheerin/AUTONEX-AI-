@@ -321,24 +321,26 @@ def update_profile(request: UpdateProfileRequest):
 
 @app.post("/auth/address")
 def update_shipping_address(request: UpdateAddressRequest):
-    recipient = request.recipient_name or request.username or "Aafiya Sheerin"
+    user_name_fallback = request.email.split("@")[0].replace(".", " ").title()
+    recipient = request.recipient_name or request.username or user_name_fallback
     addr = {
         "recipient_name": recipient,
         "street": request.street.strip(),
-        "city": (request.city or "Dubai Marina").strip(),
-        "country": (request.country or "United Arab Emirates").strip(),
-        "phone": (request.phone or "+971 50 123 4567").strip()
+        "city": (request.city or request.street.split(",")[0] or "Delivery Hub").strip(),
+        "country": (request.country or "India").strip(),
+        "phone": (request.phone or "+91 9790854949").strip()
     }
     updated = update_user_profile(
         email=request.email,
-        name=request.username if request.username else None,
+        name=recipient,
         shipping_address=addr
     )
+    add_user_address(request.email, recipient, addr["phone"], addr["street"], is_default=True)
     return {
         "success": True,
         "user": updated,
         "shipping_address": addr,
-        "message": f"Saved delivery destination for {recipient}: {addr['street']}, {addr['city']}."
+        "message": f"Saved delivery destination for {recipient}: {addr['street']}."
     }
 
 @app.get("/auth/addresses")
@@ -810,10 +812,27 @@ def payment_verify(request: PaymentVerifyRequest):
 
     try:
         user_email = request.user_email or transaction.get("user_email", "demo@hermora.com")
-        if request.delivery_destination:
+        fallback_name = user_email.split("@")[0].replace(".", " ").title()
+        
+        dest_val = request.delivery_destination
+        if isinstance(dest_val, dict):
+            dest_addr = dest_val.get("full_address") or dest_val.get("street") or ""
+            dest_recipient = request.buyer_name or dest_val.get("name") or dest_val.get("recipient_name") or fallback_name
+            dest_phone = dest_val.get("phone") or ""
+        else:
+            dest_addr = str(dest_val) if dest_val else ""
+            dest_recipient = request.buyer_name or fallback_name
+            dest_phone = ""
+
+        transaction["customer_name"] = dest_recipient
+        transaction["buyer_name"] = dest_recipient
+        transaction["user_email"] = user_email
+        if dest_addr:
             transaction["delivery_destination"] = {
-                "recipient_name": request.buyer_name or transaction.get("customer_name") or "Aafiya Sheerin",
-                "full_address": request.delivery_destination
+                "name": dest_recipient,
+                "recipient_name": dest_recipient,
+                "phone": dest_phone,
+                "full_address": dest_addr
             }
 
         result = verify_payment(
@@ -931,11 +950,28 @@ def get_merchant_transactions():
         elif t.get("requires_face_id"):
             bio_status = "🔐 Security PIN Required"
 
+        u_email = t.get("user_email") or "demo@hermora.com"
+        u_name = t.get("customer_name") or t.get("buyer_name")
+        if not u_name:
+            u_obj = get_user_by_email(u_email)
+            u_name = (u_obj.get("name") if u_obj else None) or u_email.split("@")[0].replace(".", " ").title()
+
+        dest_val = t.get("delivery_destination")
+        if isinstance(dest_val, dict):
+            dest_str = dest_val.get("full_address") or dest_val.get("street") or ""
+        else:
+            dest_str = str(dest_val) if dest_val else ""
+
+        if not dest_str:
+            u_obj = get_user_by_email(u_email)
+            dest_str = u_obj.get("shipping_address", {}).get("street") if u_obj else ""
+
         records.append({
             "transaction_id": t.get("transaction_id"),
             "created_at": t.get("created_at") or "Just now",
-            "customer_email": t.get("user_email", "demo@hermora.com"),
-            "customer_name": t.get("customer_name") or "Aafiya Sheerin",
+            "customer_email": u_email,
+            "customer_name": u_name,
+            "delivery_destination": dest_str or "Standard Delivery Destination",
             "product_name": product_info.get("name", "Hermora Artisan Product"),
             "merchant": t.get("merchant", "Luma Fashions"),
             "amount_usd": float(price),

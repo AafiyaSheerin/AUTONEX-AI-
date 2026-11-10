@@ -140,7 +140,14 @@ export default function Navbar({
                     <span className="shipping-badge-label">SHIPPING ADDRESS</span>
                     <div className="shipping-badge-value">
                       <span className="shipping-badge-city">
-                        {user?.shipping_address?.city || user?.shipping_address?.street?.split(",")?.[0] || "Dubai Marina"}
+                        {(() => {
+                          const def = user?.saved_addresses?.find((a) => a.is_default) || user?.saved_addresses?.[0];
+                          if (def) {
+                            const label = def.name ? `${def.name} • ${def.full_address}` : def.full_address;
+                            return label.length > 22 ? `${label.slice(0, 20)}...` : label;
+                          }
+                          return user?.shipping_address?.street?.split(",")?.[0] || user?.shipping_address?.city || "Set Delivery Address";
+                        })()}
                       </span>
                       <span className="shipping-edit-hint">Change</span>
                     </div>
@@ -282,8 +289,24 @@ export default function Navbar({
         user={user}
         onAddressUpdated={(newAddrs) => {
           if (user) {
-            const updatedUser = { ...user, saved_addresses: newAddrs };
+            const def = newAddrs.find((a) => a.is_default) || newAddrs[0];
+            const updatedUser = {
+              ...user,
+              saved_addresses: newAddrs,
+              shipping_address: def
+                ? {
+                    recipient_name: def.name,
+                    phone: def.phone,
+                    street: def.full_address,
+                    city: def.full_address.split(",")[0] || def.name,
+                    country: "India"
+                  }
+                : user.shipping_address
+            };
             localStorage.setItem("hermora_active_user", JSON.stringify(updatedUser));
+            if (onSaveAddress && def) {
+              onSaveAddress(updatedUser.shipping_address);
+            }
           }
         }}
       />

@@ -279,9 +279,15 @@ def verify_payment(
     # Resolve recipient name and delivery destination for logistics & Zapier dispatch
     dest = transaction.get("delivery_destination", {})
     if isinstance(dest, dict):
-        dest_str = dest.get("full_address") or dest.get("street") or ""
-        buyer_name = dest.get("name") or dest.get("recipient_name")
-        buyer_phone = dest.get("phone")
+        dest_val = dest.get("full_address")
+        if isinstance(dest_val, dict):
+            dest_str = dest_val.get("full_address") or dest_val.get("street") or ""
+            buyer_name = dest_val.get("name") or dest_val.get("recipient_name") or dest.get("name") or dest.get("recipient_name")
+            buyer_phone = dest_val.get("phone") or dest.get("phone")
+        else:
+            dest_str = dest_val or dest.get("street") or ""
+            buyer_name = dest.get("name") or dest.get("recipient_name")
+            buyer_phone = dest.get("phone")
     else:
         dest_str = str(dest) if dest else ""
         buyer_name = None
@@ -290,11 +296,20 @@ def verify_payment(
     if not dest_str:
         user_obj = get_user_by_email(actual_buyer_email)
         addr = user_obj.get("shipping_address", {}) if user_obj else {}
-        dest_str = f"{addr.get('street', '42 Luxury Promenade, Suite 4B')}, {addr.get('city', 'Dubai Marina')}"
+        dest_str = addr.get("street") or addr.get("city") or "Standard Delivery Destination"
     if not buyer_name:
-        buyer_name = updated_user.get("name") or "Aafiya Sheerin"
+        buyer_name = transaction.get("customer_name") or transaction.get("buyer_name") or updated_user.get("name") or actual_buyer_email.split("@")[0].replace(".", " ").title()
     if not buyer_phone:
-        buyer_phone = updated_user.get("shipping_address", {}).get("phone") or "+971 50 123 4567"
+        buyer_phone = updated_user.get("shipping_address", {}).get("phone") or "+91 9790854949"
+
+    transaction["customer_name"] = buyer_name
+    transaction["buyer_name"] = buyer_name
+    transaction["delivery_destination"] = {
+        "name": buyer_name,
+        "recipient_name": buyer_name,
+        "phone": buyer_phone,
+        "full_address": dest_str
+    }
 
     # ── SPONSOR INTEGRATION 1: Zapier Automated Webhook (Dispatched to Buyer's Address) ──
     try:

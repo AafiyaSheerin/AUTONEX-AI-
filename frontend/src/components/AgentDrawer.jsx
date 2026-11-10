@@ -46,12 +46,13 @@ export default function AgentDrawer({
 
   if (!isOpen) return null;
 
+  const userFallbackName = user?.name || user?.email?.split("@")?.[0]?.replace(".", " ") || "Valued Client";
   const selectedAddress =
     savedAddresses.find((a) => a.id === selectedAddressId) ||
     savedAddresses[0] || {
-      name: user?.shipping_address?.recipient_name || user?.name || "Aafiya Sheerin",
-      phone: user?.shipping_address?.phone || "+971 50 123 4567",
-      full_address: user?.shipping_address?.street || "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE"
+      name: user?.shipping_address?.recipient_name || userFallbackName,
+      phone: user?.shipping_address?.phone || "+91 9790854949",
+      full_address: user?.shipping_address?.street || "Standard Delivery Address"
     };
 
   const deliveryAddress = selectedAddress.full_address;

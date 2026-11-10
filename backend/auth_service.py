@@ -406,20 +406,24 @@ def get_user_addresses(email: str) -> list:
     """Returns the list of saved delivery addresses for a buyer."""
     users = load_users()
     email_key = (email or "demo@hermora.com").lower().strip()
-    u = users.get(email_key) or users.get("demo@hermora.com") or {}
+    u = users.get(email_key) or {}
     addresses = u.get("saved_addresses")
     if not addresses:
         ship = u.get("shipping_address") or {}
-        default_addr = {
-            "id": "addr_01",
-            "name": ship.get("recipient_name") or u.get("name", "Aafiya Sheerin"),
-            "phone": ship.get("phone") or "+971 50 123 4567",
-            "full_address": ship.get("street") or "Penthouse 4B, Al-Reem Tower, Dubai Marina, UAE",
-            "is_default": True
-        }
-        addresses = [default_addr]
-        u["saved_addresses"] = addresses
-        save_users(users)
+        u_name = u.get("name") or email_key.split("@")[0].replace(".", " ").title()
+        if ship.get("street"):
+            default_addr = {
+                "id": "addr_01",
+                "name": ship.get("recipient_name") or u_name,
+                "phone": ship.get("phone") or "+91 9790854949",
+                "full_address": ship.get("street"),
+                "is_default": True
+            }
+            addresses = [default_addr]
+            u["saved_addresses"] = addresses
+            save_users(users)
+        else:
+            addresses = []
     return addresses
 
 def add_user_address(email: str, name: str, phone: str, full_address: str, is_default: bool = False) -> dict:
@@ -427,8 +431,20 @@ def add_user_address(email: str, name: str, phone: str, full_address: str, is_de
     users = load_users()
     email_key = (email or "demo@hermora.com").lower().strip()
     if email_key not in users:
-        email_key = "demo@hermora.com"
+        users[email_key] = {
+            "id": f"usr_{uuid4().hex[:8]}",
+            "email": email_key,
+            "name": name.strip() or email_key.split("@")[0].replace(".", " ").title(),
+            "monthly_allowance": 500.0,
+            "autonomous_limit": 15.0,
+            "monthly_spent": 0.0,
+            "security_pin": "2007",
+            "saved_addresses": []
+        }
     u = users[email_key]
+    if name.strip():
+        u["name"] = name.strip()
+
     addresses = u.get("saved_addresses") or []
 
     if is_default or not addresses:
@@ -437,7 +453,7 @@ def add_user_address(email: str, name: str, phone: str, full_address: str, is_de
 
     new_addr = {
         "id": f"addr_{uuid4().hex[:6]}",
-        "name": name.strip(),
+        "name": name.strip() or u.get("name", "Valued Client"),
         "phone": phone.strip(),
         "full_address": full_address.strip(),
         "is_default": bool(is_default or not addresses)
@@ -451,8 +467,8 @@ def add_user_address(email: str, name: str, phone: str, full_address: str, is_de
             "recipient_name": new_addr["name"],
             "phone": new_addr["phone"],
             "street": new_addr["full_address"],
-            "city": "Dubai Marina",
-            "country": "UAE"
+            "city": new_addr["full_address"].split(",")[0],
+            "country": "India"
         }
     save_users(users)
     return new_addr

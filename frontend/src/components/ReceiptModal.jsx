@@ -56,19 +56,19 @@ export default function ReceiptModal({ isOpen, onClose, receipt }) {
               <div className="data-row">
                 <span>Recipient Name:</span>
                 <strong>
-                  {receipt.delivery_destination?.name || receipt.shipping_address?.recipient_name || receipt.buyer_name || "Aafiya Sheerin"}
+                  {receipt.delivery_destination?.name || receipt.shipping_address?.recipient_name || receipt.buyer_name || receipt.user_email?.split("@")[0] || "Valued Client"}
                 </strong>
               </div>
               <div className="data-row">
                 <span>Contact Phone:</span>
                 <strong>
-                  {receipt.delivery_destination?.phone || receipt.shipping_address?.phone || "+971 50 123 4567"}
+                  {receipt.delivery_destination?.phone || receipt.shipping_address?.phone || "+91 9790854949"}
                 </strong>
               </div>
               <div className="data-row">
                 <span>Full Delivery Address:</span>
                 <strong>
-                  {receipt.delivery_destination?.full_address || receipt.delivery_destination?.street || (typeof receipt.delivery_destination === 'string' ? receipt.delivery_destination : null) || receipt.shipping_address?.street || "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE"}
+                  {receipt.delivery_destination?.full_address || receipt.delivery_destination?.street || (typeof receipt.delivery_destination === 'string' ? receipt.delivery_destination : null) || receipt.shipping_address?.street || "Standard Delivery Address"}
                 </strong>
               </div>
               <div className="data-row">

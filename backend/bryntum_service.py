@@ -108,14 +108,15 @@ def get_bryntum_logistics_data() -> Dict[str, Any]:
             prod = t.get("selected_product") or {}
             pname = prod.get("name") or t.get("product_name") or "Artisan Fashion Item"
             amount = float(t.get("amount_usd") or prod.get("price") or t.get("price_usd") or 42.0)
-            buyer = t.get("buyer_name") or t.get("customer_name") or "Aafiya Sheerin"
+            u_email = t.get("user_email") or ""
+            buyer = t.get("buyer_name") or t.get("customer_name") or u_email.split("@")[0].replace(".", " ").title() or "Valued Client"
             
             dest = t.get("delivery_destination") or t.get("shipping_address")
             if isinstance(dest, dict):
-                full_addr = dest.get("full_address")
-                addr = full_addr if isinstance(full_addr, str) else "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE"
+                full_addr = dest.get("full_address") or dest.get("street")
+                addr = str(full_addr) if full_addr else "Standard Delivery Address"
             else:
-                addr = str(dest) if dest else "42 Luxury Promenade, Suite 4B, Dubai Marina, UAE"
+                addr = str(dest) if dest else "Standard Delivery Address"
 
             courier = t.get("courier") or "DHL Express"
 
