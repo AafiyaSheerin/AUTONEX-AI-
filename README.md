@@ -1,176 +1,245 @@
-# 🛡️ Hermora — Autonomous Agentic Commerce Platform
-### *The Trust & Logistics Layer for Agentic Commerce, PayPal Payments & Multi-Merchant Logistics*
+# 🚀 AUTONEX AI — Autonomous Agentic Commerce & PayPal Security Platform
 
-> **"AI agents can shop for you, but they can't spend beyond your rules or deliver without logistics."**
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Node 18+](https://img.shields.io/badge/Node-18%2B-green.svg)](https://nodejs.org/)
+[![PayPal Sandbox](https://img.shields.io/badge/PayPal-Sandbox%20Orders%20v2-0079C1.svg)](https://developer.paypal.com/)
+[![Render](https://img.shields.io/badge/Deployed-Render-46E3B7.svg)](https://autonex-backend-i28q.onrender.com)
+
+> **"Authorize. Automate. Transact."**  
+> *AUTONEX AI bridges autonomous AI agent procurement with institutional-grade financial guardrails, real-time PayPal Sandbox settlements, and end-to-end supply chain fulfillment.*
 
 ---
 
 ## 📑 Table of Contents
-1. [What is Hermora?](#1-what-is-hermora)
-2. [Sponsored Technology Implementations (6 Sponsors)](#2-sponsored-technology-implementations-6-sponsors)
-3. [Dual-Role Architecture & Experience](#3-dual-role-architecture--experience)
-4. [Security Vault & PIN Protection](#4-security-vault--pin-protection)
-5. [Delivery & Fulfillment Logistics](#5-delivery--fulfillment-logistics)
-6. [Step-by-Step Installation & Runbook](#6-step-by-step-installation--runbook)
-7. [Judges' Demonstration Walkthrough](#7-judges-demonstration-walkthrough)
-8. [API Reference](#8-api-reference)
+1. [Overview](#-overview)
+2. [Approved OSI License](#-approved-osi-license)
+3. [How PayPal is Used in AUTONEX](#-how-paypal-is-used-in-autonex)
+4. [How AI is Used in AUTONEX](#-how-ai-is-used-in-autonex)
+5. [Sponsor Integrations & Technologies](#-sponsor-integrations--technologies)
+6. [System Architecture](#-system-architecture)
+7. [Setup & Installation Instructions](#-setup--installation-instructions)
+8. [Live Cloud Deployment Links](#-live-cloud-deployment-links)
+9. [API Reference & Testing](#-api-reference--testing)
 
 ---
 
-## 1. What is Hermora?
-**Hermora** is an agentic-commerce platform designed for the **PayPal Agentic Commerce & AI Payments Hackathon**. 
+## 🌟 Overview
 
-It allows users to delegate shopping tasks to an **autonomous AI Buyer Agent** (powered by Google Gemini), while enforcing strict financial and security guardrails:
-* **Delegated Monthly Spending Allowance** (default: \$500.00 USD/month with automatic 1st-of-the-month calendar revival).
-* **Autonomous Micro-Limit** (\$15.00 USD): Small, everyday items can be purchased automatically without bothering the user.
-* **4-Digit Security PIN Authorization (`2007`)**: Any purchase above \$15.00 automatically pauses and requires human PIN authorization before funds are captured.
-* **100% PayPal Sandbox Integration**: Executes real server-to-server Order Creation (`/v2/checkout/orders`) and Payment Capture (`/capture`) via PayPal's official REST APIs and Smart Buttons.
-* **Live Channel3 Multi-Merchant Discovery**: Connects directly to `https://api.trychannel3.com/v1/search` with live product feeds and merchant stores.
-* **Bryntum Logistics & Gantt Hub**: Post-purchase fulfillment dependency planning and courier fleet resource scheduling.
-* **Explainable Decision Invoices**: Generates a clean cryptographic invoice explaining *why* an item was selected, payment gateway IDs, and the exact verified **Ship To / Delivery Destination**.
+**AUTONEX AI** is an autonomous agentic commerce platform built for the **PayPal Agentic Commerce & AI Payments Hackathon**. It delegates routine and complex purchasing tasks to an autonomous AI agent while maintaining absolute user control over budgets, spending rules, and delivery logistics.
 
----
-
-## 2. Sponsored Technology Implementations (6 Sponsors)
-
-Hermora integrates **6 official hackathon sponsor tools** to build an enterprise-grade agentic commerce architecture:
-
-| Sponsor Tool | Role & Integration in Hermora | Where to Find It |
-| :--- | :--- | :--- |
-| **1. PayPal Sandbox** | **Primary Financial Rail**: Connects to PayPal Sandbox v2 Orders & Capture APIs and embeds official PayPal Smart Buttons with vaulted shipping address transmission. | AI Buyer Drawer & Checkout |
-| **2. AG Grid** | **Enterprise Financial Ledger**: High-performance interactive data grid rendering all live merchant orders, customer accounts, capture IDs, and 1-click CSV export. | Merchant Hub &rarr; Tab 1 |
-| **3. Channel3** | **Live Multi-Merchant Feed**: Live AI agent discovery engine connecting to `api.trychannel3.com/v1/search` with real brands (Adidas, Society of Cloth), live prices, CDN photos, and store links. | Merchant Hub &rarr; Tab 5 |
-| **4. Bryntum** | **Gantt & Courier Scheduler**: 5-stage task dependency timeline with automatic cascading delay calculations + multi-courier resource fleet scheduling (DHL, FedEx, Drone). | Merchant Hub &rarr; Tab 6 |
-| **5. Elastic** | **Security Observability & Catalog Indexing**: Ingests real-time security events, PIN verification logs, fraud scores, and provides typo-tolerant full-text search. | Merchant Hub &rarr; Tab 4 |
-| **6. Zapier** | **Post-Purchase Automation Webhooks**: Automatically dispatches live webhook payloads on PayPal capture to trigger customer email receipts (Gmail), Discord alerts, or Google Sheets rows. | Merchant Hub &rarr; Tab 3 |
+### Key Highlights
+- **Autonomous Agentic Checkout**: Natural-language conversational procurement powered by Google Gemini.
+- **Strict Financial Boundary Verification**: Dynamic monthly allowance quotas and human security authorization for higher-value transactions.
+- **Server-to-Server PayPal Sandbox Capture**: Real-time order creation and verified payment capture via official PayPal v2 endpoints.
+- **Enterprise Post-Purchase Logistics**: Interactive Gantt charts, scheduler timelines, and merchant courier dispatch confirmation.
+- **Automated Omnichannel Webhooks**: Dynamic Zapier-powered buyer confirmation notifications.
 
 ---
 
-## 3. Dual-Role Architecture & Experience
+## 📜 Approved OSI License
 
-### A. 🛍️ Client Boutique & AI Personal Shopper
-* **Curated Storefront**: Artisan modest fashion (Abayas 🧕), everyday clothing (Clothes 👕), fine fragrance (🌸), luxury bags, and jewelry.
-* **"Shop with AI" Drawer**: Powered by Gemini. Give any prompt (e.g. *"Find me a pure linen shirt under $35 delivered in 2 days."*).
-* **Delivery Destination Card**: Shows the pre-authorized vault destination with an inline **`✏️ Change Address`** button to customize delivery for any order.
-* **Security PIN & Limits Page**: Set your monthly allowance gauge ($150–$1,000) and change your 4-digit Security PIN (`2007`).
+This project is licensed under the approved **[OSI MIT License](LICENSE)**. You are free to inspect, use, modify, and distribute this software in accordance with the license conditions.
 
-### B. 💼 Merchant Operations Hub
-* **Financial Overview**: Live KPI metric cards for Gross Revenue, Instant PayPal Sandbox Payouts, PIN Verification Rate (100%), and active catalog count.
-* **AG Grid Ledger**: Full sortable/filterable transaction ledger with CSV export.
-* **Inventory Manager**: Add new boutique products directly to the live catalog and search index, with preset category chips and custom emoji/image uploads.
-* **Zapier Automations**: Inspect webhook dispatches and test live catch hooks.
-* **Elastic Security Logs**: Real-time fraud and payment authorization audit trail.
-* **Channel3 Feed**: Live federated multi-merchant discovery feed powered by `trychannel3.com`.
-* **Bryntum Logistics Hub**: Gantt task dependency pipeline and multi-courier fleet resource booking.
-
----
-
-## 4. Security Vault & PIN Protection
-
-Hermora replaces vulnerable or intrusive biometric scanners with a clean, bank-grade **4-Digit Security PIN**:
-
-* **Default PIN:** `2007` (Pre-configured for `demo@hermora.com`).
-* **Vault Allowance:** `$500.00 USD` monthly budget with real-time remaining balance tracking.
-* **Automatic Monthly Revival:** On the 1st of every month, the spent amount automatically resets to `$0.00` and the full allowance is restored without requiring manual admin intervention.
-* **Dynamic Spending Limits:** Users can reconfigure their monthly allowance or update their PIN anytime inside the Security Vault page.
-
----
-
-## 5. Delivery & Fulfillment Logistics
-
-In autonomous commerce, users do not fill out long shipping forms. Instead:
-1. **Pre-Authorized Vault Destination:** The user's registered delivery address is loaded directly from their profile:
-   * **Recipient:** `Aafiya Sheerin`
-   * **Address:** `42 Luxury Promenade, Suite 4B, Dubai Marina`
-   * **Phone:** `+971 50 123 4567`
-2. **In-Drawer Customization:** In the AI Buyer Drawer, users can click **`✏️ Change Address`** to enter a custom destination for any specific order.
-3. **PayPal Vault Integration:** The verified shipping address is attached to the PayPal transaction payload so merchants can print shipping labels automatically.
-4. **Clean Invoice Printing:** The decision receipt modal prints an official invoice containing the item details, payment gateway reference, and **Ship To / Delivery Destination**.
-
----
-
-## 6. Step-by-Step Installation & Runbook
-
-### Prerequisites
-* **Python:** 3.10 or higher
-* **Node.js:** v18 or higher (with npm)
-* **OS:** Windows / macOS / Linux
-
-### Environment Setup (`.env`)
-Ensure `.env` in the project root contains:
-```env
-# PayPal Sandbox Credentials
-PAYPAL_CLIENT_ID=BAA21NIAHiC0yfZ1O-7kestyMCNZUkkbtXq530D7FpEvManBb9IdYd2m5-wtwLyK4HDhD_ZTseoGKEBTzc
-PAYPAL_CLIENT_SECRET=EI0pTyMduLSScdcg94kzzVOq9Q_kVQVAt3zzrBHSCs8wq1ogwhRywU9gJFij6A9KgIAlYWwB7_a_cd_Q
-PAYPAL_MODE=sandbox
-
-# Gemini AI Key
-GEMINI_API_KEY=your_gemini_api_key
-
-# Channel3 Live API Key
-CHANNEL3_API_KEY=m9e7BYShHw1XySZyN2Ssc7pnLDpDSOkG5ESSnubf
-
-# Zapier Webhook (Optional)
-ZAPIER_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/29381166/49ncwqi/
+```
+MIT License
+Copyright (c) 2026 Aafiya Sheerin
 ```
 
-### Launching the Application
+---
 
-1. **Start Backend Server:**
-   ```powershell
-   cd c:\Hermora\aegiscart-ai-main
-   python -m uvicorn backend.main:app --port 8086 --reload
-   ```
-   *Runs on `http://127.0.0.1:8086` (Swagger docs at `http://127.0.0.1:8086/docs`)*
+## 💳 How PayPal is Used in AUTONEX
 
-2. **Start Frontend Client:**
-   ```powershell
-   cd c:\Hermora\aegiscart-ai-main\frontend
-   npm run dev
-   ```
-   *Runs on `http://localhost:5173`*
+PayPal serves as the core financial settlement rail across the entire platform:
+
+1. **PayPal Sandbox Orders API v2 (`/v2/checkout/orders`)**:
+   - The backend service securely exchanges OAuth 2.0 client credentials with PayPal's sandbox gateway to generate authorized server-side orders with exact itemization, currency codes, and custom reference IDs.
+2. **PayPal Smart Buttons (`@paypal/react-paypal-js`)**:
+   - Embedded directly inside the AI Buyer Checkout Drawer and storefront modals, providing familiar, frictionless, and secure payment initiation for both desktop and mobile users.
+3. **Server-Side Payment Capture (`/v2/checkout/orders/{id}/capture`)**:
+   - Once human authorization is confirmed, the server verifies and captures funds through PayPal's capture endpoint, validating captured status (`COMPLETED` / `APPROVED`), amount, and returning the unique PayPal Capture ID.
+4. **Dynamic Monthly Allowance Deduction**:
+   - On successful capture, the buyer's monthly delegated budget is automatically reduced by the exact captured amount, with automatic calendar-month revival on the first of each month.
+5. **Audited Financial Settlement Records**:
+   - Each completed transaction links the PayPal Order ID and PayPal Capture ID to an immutable ledger for reconciliation and merchant export.
 
 ---
 
-## 7. Judges' Demonstration Walkthrough
+## 🤖 How AI is Used in AUTONEX
 
-Follow these steps for a complete evaluation:
+AI is integrated at multiple levels of the user and merchant experience:
 
-1. **Storefront & Catalog:**
-   * Open `http://localhost:5173/`.
-   * Click the **`👕 Clothes`** category chip and inspect items like the *Classic Linen Shirt ($28.00)*.
-2. **AI Buyer Delegation & PIN Check:**
-   * Click **"✨ Ask AI to Buy"** on any item.
-   * View the **📍 Delivery Destination** card and click **`✏️ Change Address`** to see inline address customization.
-   * Click **"Enter PIN to Authorize"** ➔ enter `2007`.
-   * Complete payment using the PayPal Sandbox Smart Button.
-   * Click **"📄 View Agent Decision Receipt"** to view the clean invoice with the delivery destination.
-3. **Merchant Operations & AG Grid:**
-   * Click **"💼 Merchant Hub"** in the top navbar.
-   * Tab 1 (**AG Grid Financial Ledger**): Sort by amount, filter rows, and click **"Export AG Grid CSV"**.
-4. **Channel3 Live Multi-Merchant API:**
-   * Tab 5 (**Channel3 AI Shopping Feed**): See the green **`🟢 Live API Active`** badge and search `running shoes` or `saree` to inspect live external items from Adidas, Society of Cloth, etc.
-5. **Bryntum Logistics Hub:**
-   * Tab 6 (**Bryntum Logistics Hub**):
-     * **Gantt View:** Click **`⚡ Simulate +1 Day Artisan Delay`** to demonstrate automatic cascading dependency shifts across downstream courier and delivery dates.
-     * **Scheduler View:** Click **`🚚 Courier Resource Scheduler`** and reassign an order to the **Same-Day Drone** fleet.
+1. **Google Gemini Autonomous Shopping Agent**:
+   - Interprets natural-language buyer prompts (e.g., *"Find a handcrafted luxury crimson item under $50 with priority delivery"*), queries multi-merchant catalogs, and selects the optimal item meeting quality, price, and delivery constraints.
+2. **Deterministic Governance & Invariant Enforcement**:
+   - An intelligent policy engine continuously monitors agent decisions against buyer constraints. Transactions within the autonomous limit execute smoothly, while purchases requiring human oversight pause safely until approved.
+3. **Explainable Agent Decision Receipts**:
+   - Generates transparent, cryptographic decision receipts explaining the agent's exact purchase rationale, selected merchant criteria, and policy check outcomes.
+4. **Elasticsearch Vector & Full-Text Search**:
+   - Powers fast, typo-tolerant full-text and semantic product search across diverse catalog inventory.
 
 ---
 
-## 8. API Reference
+## 🛠️ Sponsor Integrations & Technologies
 
-| Endpoint | Method | Description |
+AUTONEX integrates a comprehensive suite of modern developer tools, cloud infrastructure, and hackathon sponsor technologies:
+
+| Sponsor / Tool | Category | Role in AUTONEX |
 | :--- | :--- | :--- |
-| `/catalog` | `GET` | Returns all boutique products with categories and emojis |
-| `/merchant/products` | `POST` | Adds a new luxury item to catalog and indexes in Elastic |
-| `/merchant/transactions` | `GET` | Fetches settled order records for the AG Grid ledger |
-| `/merchant/bryntum-logistics` | `GET` | Supplies Gantt tasks, dependencies, and courier resources |
-| `/channel3/discover?q=` | `GET` | Queries Channel3 live multi-merchant product feed |
-| `/channel3/status` | `GET` | Returns Channel3 configuration and API health |
-| `/channel3/config` | `POST` | Dynamically updates the Channel3 API key |
-| `/elastic/search?q=` | `GET` | Fuzzy full-text search across catalog |
-| `/elastic/security-events` | `GET` | Retrieves real-time security audit events |
-| `/zapier/test-webhook` | `POST` | Triggers a test payload to Zapier webhook |
-| `/auth/verify-pin` | `POST` | Validates user 4-digit Security PIN (`2007`) |
-| `/payment/create` | `POST` | Initiates PayPal Sandbox order capture |
-| `/payment/verify` | `POST` | Finalizes PayPal payment and updates user allowance |
+| **PayPal** | Financial Gateway | Official Sandbox Orders v2 API, Smart Buttons, and instant payment capture. |
+| **APIMatic** | API Tooling | Validates OpenAPI 3.0 specs, enforces API documentation standards, and validates server endpoint contracts. |
+| **Postman / Astro** | API Quality | End-to-end API collection test suites, automated health-check testing, and endpoint contract validation. |
+| **Render** | Cloud Hosting | Live production hosting of the containerized FastAPI backend service with automated GitHub CI/CD. |
+| **Vercel** | Cloud Hosting | High-speed CDN hosting for the Vite/React single-page application. |
+| **Zapier** | Automation | Post-purchase webhook integration sending dynamic order confirmation emails with customer names, addresses, and tracking details. |
+| **Bryntum** | Logistics UI | Enterprise Gantt timeline and Scheduler for supply chain task dependencies and courier fleet resource allocation. |
+| **Elasticsearch** | Observability | Real-time indexing of security logs, authorization events, and faceted catalog search. |
+| **Supabase** | Database | Cloud PostgreSQL database persisting user profiles, transaction logs, and delivery destinations. |
+| **Channel3** | Commerce AI | Multi-merchant inventory sourcing feed for live product discovery. |
+| **AG Grid** | Data Grid | Enterprise interactive ledger rendering financial settlements with column filtering and CSV export. |
+
+---
+
+## 🏗️ System Architecture
+
+```
+[ Buyer / Client Browser ] ────────── [ React + Vite Single-Page App ]
+                                                 │
+                                 HTTPS REST / Webhooks
+                                                 ▼
+                                     [ FastAPI Backend API ]
+                                                 │
+        ┌───────────────────────┬────────────────┴───────────────────────┐
+        ▼                       ▼                                        ▼
+[ PayPal Sandbox v2 ]   [ Google Gemini AI ]                    [ Supabase Postgres ]
+  • Create Order          • Autonomous Agent                      • User Accounts
+  • Capture Payment       • Policy Invariants                     • Transactions
+  • Smart Buttons         • Decision Receipts                     • Saved Addresses
+        │
+        ├───────────────────────┬────────────────────────────────────────┐
+        ▼                       ▼                                        ▼
+[ Zapier Webhooks ]     [ Bryntum Logistics ]                   [ Elastic Security ]
+  • Dynamic Email Outbox  • Gantt Task Dependencies               • Fraud Observability
+  • Courier Triggers      • Dispatch Confirmation                 • Catalog Indexing
+```
+
+---
+
+## 🚀 Setup & Installation Instructions
+
+### Prerequisites
+- **Python**: 3.10 or higher
+- **Node.js**: 18.0 or higher
+- **Package Managers**: `pip` and `npm`
+- **Git**
+
+---
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/AafiyaSheerin/AUTONEX-AI-.git
+cd AUTONEX-AI-
+```
+
+---
+
+### Step 2: Configure Environment Variables (`.env`)
+Create a `.env` file in the project root:
+
+```env
+# PayPal Sandbox Credentials
+PAYPAL_CLIENT_ID=your_paypal_sandbox_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_sandbox_client_secret
+PAYPAL_MODE=sandbox
+
+# AI Services
+GEMINI_API_KEY=your_gemini_api_key
+
+# Supabase (Optional for cloud database persistence)
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Zapier Webhook
+ZAPIER_WEBHOOK_URL=https://hooks.zapier.com/hooks/catch/your_webhook_id/
+
+# Channel3 Multi-Merchant API
+CHANNEL3_API_KEY=your_channel3_api_key
+
+# Server Port
+PORT=8086
+```
+
+---
+
+### Step 3: Backend Setup
+```bash
+# Navigate to backend directory
+cd backend
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Start backend server
+python -m uvicorn main:app --host 0.0.0.0 --port 8086 --reload
+```
+The backend API is now running at `http://127.0.0.1:8086`.  
+Interactive Swagger documentation is available at `http://127.0.0.1:8086/docs`.
+
+---
+
+### Step 4: Frontend Setup
+In a new terminal window:
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install Node dependencies
+npm install
+
+# Start Vite dev server
+npm run dev -- --port 5173
+```
+The frontend is now accessible at `http://localhost:5173`.
+
+---
+
+## 🌐 Live Cloud Deployment Links
+
+- **Live Backend API (Render)**: [https://autonex-backend-i28q.onrender.com](https://autonex-backend-i28q.onrender.com)
+- **API Documentation (Render Swagger)**: [https://autonex-backend-i28q.onrender.com/docs](https://autonex-backend-i28q.onrender.com/docs)
+- **GitHub Repository**: [https://github.com/AafiyaSheerin/AUTONEX-AI-](https://github.com/AafiyaSheerin/AUTONEX-AI-)
+
+---
+
+## 🧪 API Reference & Testing
+
+### Key Endpoints
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/health` | Service health status check. |
+| `GET` | `/config` | Public PayPal Client ID & service status. |
+| `POST` | `/checkout` | Executes AI agent procurement mission. |
+| `POST` | `/payment/create` | Generates a verified PayPal Sandbox Order. |
+| `POST` | `/payment/verify` | Captures funds and logs financial settlement. |
+| `GET` | `/merchant/bryntum-logistics` | Retrieves Gantt dependency data and orders. |
+| `POST` | `/merchant/dispatch-order` | Merchant confirms courier handover & tracking. |
+| `GET` | `/zapier/outbox` | View dynamic customer email webhook dispatches. |
+| `GET` | `/buyer/purchase-calendar` | Buyer's verified order history and delivery schedule. |
+
+### Automated Testing
+Run compliance and fetch route verification:
+```bash
+python check_fetch.py
+```
+Run frontend production build verification:
+```bash
+cd frontend && npm run build
+```
+
+---
+
+## 👩‍💻 Author & Acknowledgements
+
+Developed by **Aafiya Sheerin** for the **PayPal Agentic Commerce & AI Payments Hackathon**.  
+Special thanks to PayPal, Google Gemini, Render, Zapier, Bryntum, Elastic, Channel3, and the hackathon sponsors for providing the developer tooling and APIs.
