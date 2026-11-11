@@ -293,23 +293,33 @@ def verify_payment(
         buyer_name = None
         buyer_phone = None
 
-    if not dest_str:
-        user_obj = get_user_by_email(actual_buyer_email)
-        addr = user_obj.get("shipping_address", {}) if user_obj else {}
-        dest_str = addr.get("street") or addr.get("city") or "Standard Delivery Destination"
-    if not buyer_name:
-        buyer_name = transaction.get("customer_name") or transaction.get("buyer_name") or updated_user.get("name") or actual_buyer_email.split("@")[0].replace(".", " ").title()
-    if not buyer_phone:
-        user_obj = get_user_by_email(actual_buyer_email)
-        if user_obj:
-            saved = user_obj.get("saved_addresses", [])
-            def_addr = next((a for a in saved if a.get("is_default")), None) or (saved[0] if saved else None)
-            if def_addr and def_addr.get("phone"):
-                buyer_phone = def_addr.get("phone")
-            elif user_obj.get("shipping_address", {}).get("phone"):
-                buyer_phone = user_obj.get("shipping_address", {}).get("phone")
-    if not buyer_phone:
-        buyer_phone = updated_user.get("shipping_address", {}).get("phone") or "+91 9790854949"
+    user_obj = get_user_by_email(actual_buyer_email)
+    saved = user_obj.get("saved_addresses", []) if user_obj else []
+    def_addr = next((a for a in saved if a.get("is_default")), None) or (saved[0] if saved else None)
+
+    if not dest_str or dest_str in ["Dubai Marina, UAE", "42 Luxury Promenade, Dubai Marina, UAE", "Standard Delivery Destination", "Dubai Marina"]:
+        if def_addr and def_addr.get("full_address"):
+            dest_str = def_addr["full_address"]
+        elif user_obj and user_obj.get("shipping_address", {}).get("street"):
+            dest_str = user_obj["shipping_address"]["street"]
+        else:
+            dest_str = "Standard Delivery Destination"
+
+    if not buyer_name or (buyer_name == "Aafiya Sheerin" and actual_buyer_email != "demo@hermora.com"):
+        if def_addr and def_addr.get("name"):
+            buyer_name = def_addr["name"]
+        elif user_obj and user_obj.get("name"):
+            buyer_name = user_obj["name"]
+        else:
+            buyer_name = actual_buyer_email.split("@")[0].replace(".", " ").title()
+
+    if not buyer_phone or (buyer_phone == "+971 50 123 4567" and actual_buyer_email != "demo@hermora.com"):
+        if def_addr and def_addr.get("phone"):
+            buyer_phone = def_addr["phone"]
+        elif user_obj and user_obj.get("shipping_address", {}).get("phone"):
+            buyer_phone = user_obj["shipping_address"]["phone"]
+        else:
+            buyer_phone = "+91 9790854949"
 
     transaction["customer_name"] = buyer_name
     transaction["buyer_name"] = buyer_name
@@ -405,6 +415,12 @@ def verify_payment(
                 "status": "PAYMENT_VERIFIED"
             }
         )
+
+    try:
+        from supabase_client import db_save_transaction
+        db_save_transaction(transaction)
+    except Exception as db_err:
+        print(f"[Supabase] Transaction save notice: {db_err}")
 
     return {
         "success": True,

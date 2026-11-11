@@ -138,8 +138,8 @@ class UpdateAddressRequest(BaseModel):
     username: str | None = None
     recipient_name: str | None = None
     street: str
-    city: str | None = "Dubai Marina"
-    country: str | None = "United Arab Emirates"
+    city: str | None = None
+    country: str | None = "India"
     phone: str | None = ""
 
 class VerifyPinRequest(BaseModel):
@@ -281,7 +281,7 @@ def login_google(request: GoogleLoginRequest):
 def forgot_password(request: ForgotPasswordRequest):
     user = get_user_by_email(request.email)
     if not user:
-        raise HTTPException(status_code=404, detail="No Hermora account found with this email.")
+        raise HTTPException(status_code=404, detail="No AUTONEX account found with this email.")
     reset_pin = f"{uuid4().hex[:6].upper()}"
     return {
         "success": True,
@@ -747,6 +747,7 @@ def approve(request: ApprovalRequest):
     try:
         result = approve_transaction(transaction, request.approved_by)
         TRANSACTIONS[request.transaction_id] = transaction
+        db_save_transaction(transaction)
 
         return {
             "success": result.get("success", False),
@@ -786,6 +787,7 @@ def payment_create(request: PaymentCreateRequest):
             raise HTTPException(status_code=status_code, detail=result.get("message", "Payment order creation failed."))
 
         TRANSACTIONS[request.transaction_id] = transaction
+        db_save_transaction(transaction)
 
         return {
             "success": result.get("success", False),
@@ -848,6 +850,7 @@ def payment_verify(request: PaymentVerifyRequest):
             raise HTTPException(status_code=status_code, detail=result.get("message", "Payment capture failed."))
 
         TRANSACTIONS[request.transaction_id] = transaction
+        db_save_transaction(transaction)
 
         return {
             "success": result.get("success", False),
@@ -894,6 +897,40 @@ class Channel3ConfigRequest(BaseModel):
 
 @app.on_event("startup")
 def startup_event():
+    global transaction_counter, TRANSACTIONS
+    try:
+        from supabase_client import is_supabase_configured, db_get_all_transactions, db_get_all_users
+        if is_supabase_configured():
+            past_txns = db_get_all_transactions()
+            for tx in past_txns:
+                tx_id = tx.get("transaction_id")
+                if tx_id:
+                    TRANSACTIONS[tx_id] = tx
+                    try:
+                        num = int(tx_id.split("_")[-1])
+                        if num > transaction_counter:
+                            transaction_counter = num
+                    except Exception:
+                        pass
+            print(f"[Startup] Hydrated {len(past_txns)} transactions from Supabase.")
+
+            remote_users = db_get_all_users()
+            if remote_users:
+                local_users = load_users()
+                for ru in remote_users:
+                    em = ru.get("email", "").lower().strip()
+                    if em:
+                        if em not in local_users:
+                            local_users[em] = ru
+                        else:
+                            for k, v in ru.items():
+                                if v is not None:
+                                    local_users[em][k] = v
+                save_users(local_users)
+                print(f"[Startup] Synchronized {len(remote_users)} users from Supabase.")
+    except Exception as s_err:
+        print(f"[Startup] Supabase hydration warning: {s_err}")
+
     try:
         catalog = load_catalog()
         products = catalog.get("products", [])
@@ -909,7 +946,18 @@ def startup_event():
 def get_merchant_metrics():
     """Returns financial and security KPIs for the Merchant Dashboard."""
     all_txns = list(TRANSACTIONS.values())
-    verified_txns = [t for t in all_txns if t.get("status") == "PAYMENT_VERIFIED"]
+    try:
+        from supabase_client import is_supabase_configured, db_get_all_transactions
+        if is_supabase_configured():
+            remote = db_get_all_transactions()
+            existing_ids = {t.get("transaction_id") for t in all_txns if t.get("transaction_id")}
+            for r in remote:
+                if r.get("transaction_id") and r.get("transaction_id") not in existing_ids:
+                    all_txns.append(r)
+    except Exception:
+        pass
+
+    verified_txns = [t for t in all_txns if t.get("status") in ("PAYMENT_VERIFIED", "COMPLETED", "SUCCESS")]
     
     total_rev = sum(float(t.get("amount_usd", t.get("price_usd", 0.0))) for t in verified_txns)
     total_orders = len(all_txns)
@@ -938,7 +986,19 @@ def get_merchant_metrics():
 def get_merchant_transactions():
     """Returns formatted transaction records for the AG Grid Ledger."""
     records = []
-    for t in TRANSACTIONS.values():
+    txns = list(TRANSACTIONS.values())
+    try:
+        from supabase_client import is_supabase_configured, db_get_all_transactions
+        if is_supabase_configured():
+            remote = db_get_all_transactions()
+            existing_ids = {t.get("transaction_id") for t in txns if t.get("transaction_id")}
+            for r in remote:
+                if r.get("transaction_id") and r.get("transaction_id") not in existing_ids:
+                    txns.append(r)
+    except Exception:
+        pass
+
+    for t in txns:
         product_info = t.get("selected_product", {})
         price = t.get("amount_usd", t.get("price_usd", product_info.get("price", 0.0)))
         
@@ -950,9 +1010,17 @@ def get_merchant_transactions():
 
         u_email = t.get("user_email") or "demo@hermora.com"
         u_name = t.get("customer_name") or t.get("buyer_name")
-        if not u_name:
-            u_obj = get_user_by_email(u_email)
-            u_name = (u_obj.get("name") if u_obj else None) or u_email.split("@")[0].replace(".", " ").title()
+        u_obj = get_user_by_email(u_email)
+        saved = u_obj.get("saved_addresses", []) if u_obj else []
+        def_addr = next((a for a in saved if a.get("is_default")), None) or (saved[0] if saved else None)
+
+        if not u_name or (u_name == "Aafiya Sheerin" and u_email != "demo@hermora.com"):
+            if def_addr and def_addr.get("name"):
+                u_name = def_addr["name"]
+            elif u_obj and u_obj.get("name"):
+                u_name = u_obj["name"]
+            else:
+                u_name = u_email.split("@")[0].replace(".", " ").title()
 
         dest_val = t.get("delivery_destination")
         if isinstance(dest_val, dict):
@@ -960,9 +1028,11 @@ def get_merchant_transactions():
         else:
             dest_str = str(dest_val) if dest_val else ""
 
-        if not dest_str:
-            u_obj = get_user_by_email(u_email)
-            dest_str = u_obj.get("shipping_address", {}).get("street") if u_obj else ""
+        if not dest_str or dest_str in ["42 Luxury Promenade, Suite 4B", "Dubai Marina, UAE", "Standard Delivery Destination"]:
+            if def_addr and def_addr.get("full_address"):
+                dest_str = def_addr["full_address"]
+            elif u_obj and u_obj.get("shipping_address", {}).get("street"):
+                dest_str = u_obj["shipping_address"]["street"]
 
         records.append({
             "transaction_id": t.get("transaction_id"),

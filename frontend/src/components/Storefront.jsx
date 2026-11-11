@@ -129,18 +129,20 @@ export default function Storefront({ onAskAiToBuy, onOpenAgent: _onOpenAgent, on
   };
 
   return (
-    <div className="storefront-page" style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px 80px" }}>
+    <div className="storefront-page" style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 16px 80px", width: "100%", boxSizing: "border-box" }}>
       {/* Hero Section with 3D Centerpiece */}
       <section
         className="storefront-hero"
         style={{
           display: "grid",
-          gridTemplateColumns: "minmax(0, 1.15fr) minmax(340px, 0.85fr)",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: "48px",
-          padding: "40px 0 28px",
-          position: "relative"
+          gap: "36px",
+          padding: "30px 0 24px",
+          position: "relative",
+          width: "100%",
+          boxSizing: "border-box"
         }}
       >
         <div className="hero-content">

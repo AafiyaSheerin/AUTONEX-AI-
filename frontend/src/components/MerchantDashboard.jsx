@@ -25,9 +25,9 @@ const hermoraDarkTheme = themeQuartz
   });
 
 const getSafeAddressString = (addr) => {
-  if (!addr) return "Dubai Marina, Dubai, UAE";
+  if (!addr) return "Standard Delivery Destination";
   if (typeof addr === "object") {
-    return addr.full_address || addr.street || addr.name || "Dubai Marina, Dubai, UAE";
+    return addr.full_address || addr.street || addr.name || "Standard Delivery Destination";
   }
   return String(addr);
 };
@@ -350,11 +350,11 @@ export default function MerchantDashboard({ onSwitchToClient: _onSwitchToClient,
     },
     {
       field: "biometric_status",
-      headerName: "PIN Security Verification",
+      headerName: "Payment & Verification Status",
       width: 250,
       cellRenderer: (params) => {
         const val = params.value || "";
-        const isVerified = val.includes("PIN") || val.includes("Verified") || val.includes("2007");
+        const isVerified = val.includes("Payment completed") || val.includes("Verified") || val.includes("PIN");
         const bg = isVerified 
           ? "rgba(207, 227, 212, 0.2)" 
           : "rgba(205, 189, 235, 0.2)";

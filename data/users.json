@@ -259,7 +259,7 @@
   "aafiyasheerin16@gmail.com": {
     "id": "usr_e3187163",
     "email": "aafiyasheerin16@gmail.com",
-    "name": "aafiya",
+    "name": "Aafiya Sheerin",
     "password": "tamil99",
     "monthly_allowance": 150.0,
     "autonomous_limit": 15.0,
@@ -286,7 +286,7 @@
         "name": "aafiya",
         "phone": "+971 50 123 4567",
         "full_address": "42 Luxury Promenade, Suite 4B, Dubai Marina, Dubai, UAE",
-        "is_default": true
+        "is_default": false
       },
       {
         "id": "addr_02",
@@ -294,8 +294,22 @@
         "phone": "+971 50 987 6543",
         "full_address": "DIFC Gate Precinct 4, Level 8, Suite 802, Dubai, UAE",
         "is_default": false
+      },
+      {
+        "id": "addr_6a7f7d",
+        "name": "Aafiya Sheerin",
+        "phone": "+919790854949",
+        "full_address": "azeez nagar 1st street kodambakkam",
+        "is_default": true
       }
-    ]
+    ],
+    "shipping_address": {
+      "recipient_name": "Aafiya Sheerin",
+      "phone": "+919790854949",
+      "street": "azeez nagar 1st street kodambakkam",
+      "city": "azeez nagar 1st street kodambakkam",
+      "country": "India"
+    }
   },
   "merchant@hermora.com": {
     "id": "usr_merchant_001",
@@ -311,5 +325,58 @@
     "avatar": "https://api.dicebear.com/7.x/bottts/svg?seed=HermoraMerchant",
     "last_cycle_month": "2026-11",
     "last_revived_at": "2026-11-09T20:03:11.052914+00:00"
+  },
+  "e2e_test@autonex.com": {
+    "id": "usr_9c0a4954",
+    "email": "e2e_test@autonex.com",
+    "name": "Test EndToEnd",
+    "password": "securepass123",
+    "monthly_allowance": 150.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "face_enrolled": true,
+    "biometric_locked": true,
+    "face_template_id": "FACE_TMPL_CEAA670F",
+    "face_biometric_vector": [
+      0.46,
+      0.38,
+      0.32,
+      1.34,
+      0.88,
+      0.72,
+      0.98,
+      0.05
+    ],
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=TestEndToEnd",
+    "biometric_locked_at": null,
+    "last_cycle_month": null,
+    "last_revived_at": null,
+    "created_at": "2026-11-11T05:36:46.782853+00:00",
+    "updated_at": "2026-11-11T05:36:44.555687+00:00"
+  },
+  "doulath.mariyam@gmail.com": {
+    "id": "usr_54e246c3",
+    "email": "doulath.mariyam@gmail.com",
+    "name": "doulath",
+    "monthly_allowance": 500.0,
+    "autonomous_limit": 15.0,
+    "monthly_spent": 0.0,
+    "security_pin": "2007",
+    "saved_addresses": [
+      {
+        "id": "addr_53d6cf",
+        "name": "doulath",
+        "phone": "+919790854949",
+        "full_address": "azeez nagar 1st street kodambakkam",
+        "is_default": true
+      }
+    ],
+    "shipping_address": {
+      "recipient_name": "doulath",
+      "phone": "+919790854949",
+      "street": "azeez nagar 1st street kodambakkam",
+      "city": "azeez nagar 1st street kodambakkam",
+      "country": "India"
+    }
   }
 }

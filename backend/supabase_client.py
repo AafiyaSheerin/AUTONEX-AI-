@@ -94,6 +94,15 @@ def db_get_user(email: str):
         return data[0]
     return None
 
+def db_get_all_users() -> list:
+    """Fetches all users from Supabase users table."""
+    if not is_supabase_configured():
+        return []
+    data, err = _supabase_request("users?select=*")
+    if data and isinstance(data, list):
+        return data
+    return []
+
 def db_upsert_user(user_data: dict):
     """Inserts or updates user in Supabase users table."""
     if not is_supabase_configured():
@@ -122,14 +131,25 @@ def db_upsert_user(user_data: dict):
         "updated_at": datetime.now(timezone.utc).isoformat()
     }
     
-    data, err = _supabase_request(
-        "users",
-        method="POST",
-        body=payload,
-        prefer="resolution=merge-duplicates,return=representation"
-    )
-    if data and isinstance(data, list) and len(data) > 0:
-        return data[0]
+    import re
+    for _ in range(6):
+        data, err = _supabase_request(
+            "users",
+            method="POST",
+            body=payload,
+            prefer="resolution=merge-duplicates,return=representation"
+        )
+        if not err and data and isinstance(data, list) and len(data) > 0:
+            return data[0]
+        if err:
+            match = re.search(r"Could not find the '([^']+)' column", err) or re.search(r"column users\.([a-zA-Z0-9_]+) does not exist", err)
+            if match:
+                missing_col = match.group(1)
+                if missing_col in payload:
+                    print(f"[Supabase Schema Warning] Remote table lacks '{missing_col}' column during upsert. Stripping and retrying.")
+                    del payload[missing_col]
+                    continue
+            break
     return None
 
 def db_update_user(email: str, updates: dict):
@@ -280,17 +300,32 @@ def db_save_transaction(tx: dict):
     if not is_supabase_configured():
         return None
 
+    amount = float(
+        tx.get("amount_usd") or 
+        tx.get("price_usd") or 
+        tx.get("total_amount") or 
+        tx.get("payment_amount") or 
+        (tx.get("selected_product", {}).get("price") if isinstance(tx.get("selected_product"), dict) else 0.0) or 
+        0.0
+    )
+
+    p_name = ""
+    if isinstance(tx.get("selected_product"), dict):
+        p_name = tx.get("selected_product", {}).get("name") or ""
+    elif tx.get("product_name"):
+        p_name = str(tx.get("product_name"))
+
     payload = {
         "transaction_id": tx.get("transaction_id"),
         "user_email": (tx.get("user_email") or "demo@hermora.com").lower().strip(),
-        "product_name": tx.get("selected_product", {}).get("name") if isinstance(tx.get("selected_product"), dict) else str(tx.get("selected_product") or ""),
-        "amount_usd": float(tx.get("price_usd") or tx.get("total_amount") or 0.0),
+        "product_name": p_name,
+        "amount_usd": amount,
         "status": tx.get("status", "CREATED"),
         "requires_face_id": bool(tx.get("requires_face_id", True)),
-        "face_verified": bool(tx.get("face_verified", False)),
+        "face_verified": bool(tx.get("face_verified", False) or tx.get("pin_verified", False)),
         "biometric_audit_hash": tx.get("biometric_verification", {}).get("audit_hash") if isinstance(tx.get("biometric_verification"), dict) else None,
         "paypal_order_id": tx.get("paypal_order_id"),
-        "paypal_capture_id": tx.get("paypal_capture_id"),
+        "paypal_capture_id": tx.get("paypal_capture_id") or tx.get("paypal_payment_id"),
         "audit_log": tx.get("audit_log", []),
         "updated_at": datetime.now(timezone.utc).isoformat()
     }
@@ -302,6 +337,15 @@ def db_save_transaction(tx: dict):
         prefer="resolution=merge-duplicates,return=representation"
     )
     return data
+
+def db_get_all_transactions() -> list:
+    """Loads all transactions from Supabase transactions table."""
+    if not is_supabase_configured():
+        return []
+    data, err = _supabase_request("transactions?select=*&order=created_at.desc")
+    if data and isinstance(data, list):
+        return data
+    return []
 
 def db_get_transaction(transaction_id: str):
     """Loads transaction from Supabase transactions table."""

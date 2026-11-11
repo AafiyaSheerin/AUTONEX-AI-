@@ -341,6 +341,7 @@ export default function App() {
         onSimulateMonthAdvance={handleSimulateMonthAdvance}
         currentRole={currentRole}
         onSaveAddress={handleSaveAddress}
+        onUserUpdated={(newUser) => setUser(newUser)}
       />
 
       <main className="hermora-main-content">

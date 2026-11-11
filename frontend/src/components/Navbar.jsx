@@ -12,11 +12,49 @@ export default function Navbar({
   onOpenSetup: _onOpenSetup,
   onSimulateMonthAdvance,
   currentRole = "client",
-  onSaveAddress: _onSaveAddress
+  onSaveAddress: _onSaveAddress,
+  onUserUpdated
 }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL || 
+    (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
+      ? `http://${window.location.hostname}:8086`
+      : "http://127.0.0.1:8086");
+
+  // Keep addresses in sync with backend on mount
+  useEffect(() => {
+    async function syncAddresses() {
+      if (!user?.email) return;
+      try {
+        const res = await fetch(`${API_URL}/auth/addresses?email=${encodeURIComponent(user.email)}`);
+        const data = await res.json();
+        if (data.success && data.addresses?.length > 0) {
+          const def = data.addresses.find((a) => a.is_default) || data.addresses[0];
+          const updatedUser = {
+            ...user,
+            saved_addresses: data.addresses,
+            shipping_address: def
+              ? {
+                  recipient_name: def.name,
+                  phone: def.phone,
+                  street: def.full_address,
+                  city: def.full_address.split(",")?.[0] || def.name,
+                  country: "India"
+                }
+              : user.shipping_address
+          };
+          localStorage.setItem("hermora_active_user", JSON.stringify(updatedUser));
+          if (onUserUpdated) onUserUpdated(updatedUser);
+        }
+      } catch (err) {
+        console.warn("Could not sync addresses on navbar mount:", err);
+      }
+    }
+    syncAddresses();
+  }, [user?.email]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -144,9 +182,13 @@ export default function Navbar({
                           const def = user?.saved_addresses?.find((a) => a.is_default) || user?.saved_addresses?.[0];
                           if (def) {
                             const label = def.name ? `${def.name} • ${def.full_address}` : def.full_address;
-                            return label.length > 22 ? `${label.slice(0, 20)}...` : label;
+                            return label.length > 24 ? `${label.slice(0, 22)}...` : label;
                           }
-                          return user?.shipping_address?.street?.split(",")?.[0] || user?.shipping_address?.city || "Set Delivery Address";
+                          const s = user?.shipping_address?.street || user?.shipping_address?.city;
+                          if (s && s !== "Dubai Marina" && !s.includes("Penthouse 4B")) {
+                            return s.length > 24 ? `${s.slice(0, 22)}...` : s;
+                          }
+                          return "Add Delivery Address";
                         })()}
                       </span>
                       <span className="shipping-edit-hint">Change</span>
@@ -202,7 +244,12 @@ export default function Navbar({
                         <div className="dropdown-stat">
                           <span>Shipping Address:</span>
                           <strong className="text-aqua" style={{ fontSize: "0.74rem" }}>
-                            {user.shipping_address?.city || user.shipping_address?.street || "Dubai Marina"}
+                            {(() => {
+                              const def = user?.saved_addresses?.find((a) => a.is_default) || user?.saved_addresses?.[0];
+                              if (def) return def.full_address.length > 26 ? `${def.full_address.slice(0, 24)}...` : def.full_address;
+                              const s = user?.shipping_address?.street || user?.shipping_address?.city;
+                              return s || "Add Delivery Address";
+                            })()}
                           </strong>
                         </div>
                         <div className="dropdown-divider" />
@@ -304,8 +351,9 @@ export default function Navbar({
                 : user.shipping_address
             };
             localStorage.setItem("hermora_active_user", JSON.stringify(updatedUser));
-            if (onSaveAddress && def) {
-              onSaveAddress(updatedUser.shipping_address);
+            if (onUserUpdated) onUserUpdated(updatedUser);
+            if (_onSaveAddress && def) {
+              _onSaveAddress(updatedUser.shipping_address);
             }
           }
         }}

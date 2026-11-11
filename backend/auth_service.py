@@ -123,20 +123,33 @@ def save_users(users):
 
 def authenticate_user(email, password):
     email_key = email.lower().strip()
-    # Try Supabase first if configured
+    pwd = str(password).strip() if password is not None else ""
+    
+    # Check Supabase first
     if is_supabase_configured():
         db_user = db_get_user(email_key)
         if db_user:
-            if db_user.get("password") != password:
-                return None, "Invalid password."
-            return sanitize_user(db_user), None
+            users = load_users()
+            users[email_key] = {**(users.get(email_key) or {}), **db_user}
+            save_users(users)
+            stored_pwd = str(db_user.get("password", "")).strip()
+            if stored_pwd and stored_pwd == pwd:
+                return sanitize_user(db_user), None
+            # If local has a newer password or matches, sync it to Supabase
+            local_user = users.get(email_key, {})
+            local_pwd = str(local_user.get("password", "")).strip()
+            if local_pwd and local_pwd == pwd:
+                db_update_user(email_key, {"password": pwd})
+                return sanitize_user(db_user), None
+            return None, "Invalid password."
 
     # Fallback to local store
     users = load_users()
     user = users.get(email_key)
     if not user:
         return None, "User not found with this email."
-    if user.get("password") != password:
+    stored_pwd = str(user.get("password", "")).strip()
+    if stored_pwd != pwd:
         return None, "Invalid password."
     return sanitize_user(user), None
 
@@ -310,15 +323,25 @@ def update_user_profile(
     return sanitize_user(user)
 
 def reset_password(email, new_password):
-    users = load_users()
     email_key = email.lower().strip()
+    new_pwd = str(new_password).strip() if new_password is not None else ""
+    if not new_pwd:
+        return False, "Password cannot be empty."
+
     if is_supabase_configured():
-        db_update_user(email_key, {"password": new_password})
+        db_update_user(email_key, {"password": new_pwd})
+
+    users = load_users()
     if email_key not in users:
-        return False, "User not found with this email."
-    users[email_key]["password"] = new_password
+        db_u = db_get_user(email_key) if is_supabase_configured() else None
+        if db_u:
+            users[email_key] = db_u
+        else:
+            return False, "User not found with this email."
+
+    users[email_key]["password"] = new_pwd
     save_users(users)
-    return True, "Password has been successfully reset."
+    return True, "Password has been successfully updated."
 
 def get_user_by_email(email):
     email_key = email.lower().strip()
@@ -335,6 +358,8 @@ def get_user_by_email(email):
                 if field in local_user and (field not in db_u or db_u.get(field) is None):
                     merged[field] = local_user[field]
             check_and_revive_user_allowance(merged)
+            users[email_key] = merged
+            save_users(users)
             return sanitize_user(merged)
 
     if local_user:
@@ -347,7 +372,27 @@ def deduct_monthly_allowance(email, amount_usd):
     users = load_users()
     email_key = (email or "demo@hermora.com").lower().strip()
     if email_key not in users:
-        email_key = "demo@hermora.com"
+        existing = get_user_by_email(email_key)
+        if existing:
+            users[email_key] = existing
+        else:
+            uname = email_key.split("@")[0].replace(".", " ").title()
+            users[email_key] = {
+                "id": f"usr_{uuid4().hex[:8]}",
+                "email": email_key,
+                "name": uname,
+                "monthly_allowance": 150.0,
+                "monthly_spent": 0.0,
+                "security_pin": "2007",
+                "shipping_address": {
+                    "recipient_name": uname,
+                    "phone": "+91 9790854949",
+                    "street": "Standard Delivery Destination",
+                    "city": "Chennai",
+                    "country": "India"
+                },
+                "saved_addresses": []
+            }
     user = users[email_key]
     check_and_revive_user_allowance(user)
     user["monthly_spent"] = round(user.get("monthly_spent", 0.0) + amount_usd, 2)
@@ -501,12 +546,13 @@ def set_default_address(email: str, address_id: str) -> bool:
         if a.get("id") == address_id:
             a["is_default"] = True
             found = True
+            city_part = a.get("full_address", "").split(",")[-2].strip() if len(a.get("full_address", "").split(",")) > 1 else (a.get("full_address") or a.get("name") or "Standard City")
             u["shipping_address"] = {
-                "recipient_name": a["name"],
-                "phone": a["phone"],
-                "street": a["full_address"],
-                "city": "Dubai Marina",
-                "country": "UAE"
+                "recipient_name": a.get("name", u.get("name", "Valued Client")),
+                "phone": a.get("phone", "+91 9790854949"),
+                "street": a.get("full_address", ""),
+                "city": city_part,
+                "country": a.get("country", "India")
             }
         else:
             a["is_default"] = False

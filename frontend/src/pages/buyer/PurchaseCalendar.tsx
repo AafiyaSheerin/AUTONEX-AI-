@@ -219,14 +219,14 @@ export default function PurchaseCalendar({
                       title={
                         typeof purchase.delivery_address === "string"
                           ? purchase.delivery_address
-                          : (purchase.delivery_address as any)?.full_address || "Dubai Marina, UAE"
+                          : (purchase.delivery_address as any)?.full_address || "Standard Delivery Destination"
                       }
                     >
                       <span>📍</span>
                       <span style={{ textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                         {typeof purchase.delivery_address === "string"
                           ? purchase.delivery_address
-                          : (purchase.delivery_address as any)?.full_address || "Dubai Marina, UAE"}
+                          : (purchase.delivery_address as any)?.full_address || "Standard Delivery Destination"}
                       </span>
                     </div>
 

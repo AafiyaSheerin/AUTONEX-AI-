@@ -21,7 +21,7 @@ _IMAGE_MAP: Dict[str, str] = {
 def _extract_address_str(dest) -> str:
     """Recursively extracts a clean, readable string address from any nested address object."""
     if not dest:
-        return "42 Luxury Promenade, Dubai Marina, UAE"
+        return "Standard Delivery Destination"
     if isinstance(dest, str):
         return dest.strip()
     if isinstance(dest, dict):
@@ -31,13 +31,15 @@ def _extract_address_str(dest) -> str:
         if isinstance(nested, dict):
             return _extract_address_str(nested)
         street = dest.get("street") or ""
-        city = dest.get("city") or "Dubai"
-        if street:
+        city = dest.get("city") or ""
+        if street and city:
             return f"{street}, {city}"
+        if street:
+            return street
         name = dest.get("name") or dest.get("recipient_name")
         if name:
-            return f"{name}, Dubai, UAE"
-    return "42 Luxury Promenade, Dubai Marina, UAE"
+            return f"{name} (Saved Delivery Destination)"
+    return "Standard Delivery Destination"
 
 
 def _resolve_product_image(product_name: str) -> str:
@@ -145,11 +147,14 @@ def get_buyer_purchase_calendar(user_email: str) -> Dict[str, Any]:
     # 2. Query Supabase transactions if configured and reachable
     if is_supabase_configured():
         try:
-            data, err = _supabase_request("transactions?status=eq.PAYMENT_VERIFIED&select=*")
+            data, err = _supabase_request("transactions?select=*&order=created_at.desc")
             if data and not err and isinstance(data, list):
                 for t in data:
                     t_email = (t.get("user_email") or "").lower().strip()
                     if t_email and t_email != normalized_email and normalized_email not in ("demo@hermora.com", "aafiya@hermora.com"):
+                        continue
+                    t_status = t.get("status", "")
+                    if t_status not in ("PAYMENT_VERIFIED", "VERIFIED", "SUCCESS", "COMPLETED", "READY_FOR_PAYMENT"):
                         continue
 
                     tid = t.get("order_id") or t.get("transaction_id") or f"ORD-{t.get('id', '')}"

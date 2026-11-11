@@ -158,12 +158,12 @@ export default function SavedAddressModal({ isOpen, onClose, user, onAddressUpda
         className="interactive-element"
         style={{
           width: "100%",
-          maxWidth: "540px",
+          maxWidth: "min(540px, 94vw)",
           margin: "0 auto",
           background: "#FFFFFF",
           border: "1px solid rgba(205, 189, 235, 0.4)",
           borderRadius: "24px",
-          padding: "28px",
+          padding: "clamp(18px, 4vw, 28px)",
           boxShadow: "0 25px 60px -12px rgba(36, 31, 58, 0.25), 0 0 35px rgba(205, 189, 235, 0.15)",
           color: "#393641",
           position: "relative",
