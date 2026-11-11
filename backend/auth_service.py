@@ -130,17 +130,22 @@ def authenticate_user(email, password):
         db_user = db_get_user(email_key)
         if db_user:
             users = load_users()
-            users[email_key] = {**(users.get(email_key) or {}), **db_user}
+            local_entry = users.get(email_key) or {}
+            merged = {**local_entry, **db_user}
+            for field in ["saved_addresses", "shipping_address", "security_pin", "face_id_locked", "passkey_locked", "biometric_locked"]:
+                if field in local_entry and (field not in db_user or db_user.get(field) is None):
+                    merged[field] = local_entry[field]
+            users[email_key] = merged
             save_users(users)
             stored_pwd = str(db_user.get("password", "")).strip()
             if stored_pwd and stored_pwd == pwd:
-                return sanitize_user(db_user), None
+                return sanitize_user(merged), None
             # If local has a newer password or matches, sync it to Supabase
             local_user = users.get(email_key, {})
             local_pwd = str(local_user.get("password", "")).strip()
             if local_pwd and local_pwd == pwd:
                 db_update_user(email_key, {"password": pwd})
-                return sanitize_user(db_user), None
+                return sanitize_user(merged), None
             return None, "Invalid password."
 
     # Fallback to local store
@@ -351,10 +356,10 @@ def get_user_by_email(email):
     if is_supabase_configured():
         db_u = db_get_user(email_key)
         if db_u:
-            # Merge local user data so fields like security_pin, face_id_locked, and passkey_locked
+            # Merge local user data so fields like security_pin, saved_addresses, shipping_address, face_id_locked, and passkey_locked
             # are preserved even if remote Supabase schema has not added those columns yet
             merged = {**local_user, **db_u}
-            for field in ["security_pin", "face_id_locked", "passkey_locked", "biometric_locked"]:
+            for field in ["security_pin", "saved_addresses", "shipping_address", "face_id_locked", "passkey_locked", "biometric_locked"]:
                 if field in local_user and (field not in db_u or db_u.get(field) is None):
                     merged[field] = local_user[field]
             check_and_revive_user_allowance(merged)

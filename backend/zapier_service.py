@@ -21,8 +21,41 @@ def format_dynamic_order_email(data: dict) -> dict:
     """
     buyer_name = data.get("buyer_name") or data.get("name") or "Valued Client"
     buyer_email = data.get("buyer_email") or data.get("to_email") or data.get("email") or "buyer@autonex.com"
-    buyer_phone = data.get("buyer_phone") or data.get("phone") or "+91 9790854949"
-    raw_addr = data.get("delivery_address") or data.get("full_address") or data.get("delivery_destination") or "Standard Delivery Destination"
+    buyer_phone = data.get("buyer_phone") or data.get("phone")
+    raw_addr = data.get("delivery_address") or data.get("full_address") or data.get("delivery_destination")
+
+    # Automatically resolve buyer profile details if placeholder or missing
+    try:
+        from auth_service import get_user_by_email
+        u_prof = get_user_by_email(buyer_email)
+        if u_prof:
+            saved = u_prof.get("saved_addresses", [])
+            def_a = next((a for a in saved if a.get("is_default")), None) or (saved[0] if saved else None)
+            if not buyer_phone or buyer_phone in ["+971 50 123 4567", "+971501234567", "N/A"]:
+                if def_a and def_a.get("phone"):
+                    buyer_phone = def_a["phone"]
+                elif u_prof.get("shipping_address", {}).get("phone"):
+                    buyer_phone = u_prof["shipping_address"]["phone"]
+                else:
+                    buyer_phone = "+91 9790854949"
+            if not raw_addr or str(raw_addr) in ["42 Luxury Promenade, Suite 4B", "Dubai Marina, UAE", "Standard Delivery Destination"]:
+                if def_a and def_a.get("full_address"):
+                    raw_addr = def_a["full_address"]
+                elif u_prof.get("shipping_address", {}).get("street"):
+                    raw_addr = u_prof["shipping_address"]["street"]
+            if not buyer_name or buyer_name in ["Valued Client", "Aafiya Sheerin"] and buyer_email != "demo@hermora.com":
+                if def_a and def_a.get("name"):
+                    buyer_name = def_a["name"]
+                elif u_prof.get("name"):
+                    buyer_name = u_prof["name"]
+    except Exception:
+        pass
+
+    if not buyer_phone:
+        buyer_phone = "+91 9790854949"
+    if not raw_addr:
+        raw_addr = "Standard Delivery Destination"
+
     if isinstance(raw_addr, dict):
         delivery_address = raw_addr.get("full_address") or raw_addr.get("street") or raw_addr.get("name") or "Standard Delivery Destination"
         if not buyer_phone or buyer_phone == "+91 9790854949":

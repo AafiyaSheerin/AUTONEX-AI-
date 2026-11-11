@@ -180,13 +180,13 @@ export default function Navbar({
                       <span className="shipping-badge-city">
                         {(() => {
                           const def = user?.saved_addresses?.find((a) => a.is_default) || user?.saved_addresses?.[0];
-                          if (def) {
-                            const label = def.name ? `${def.name} • ${def.full_address}` : def.full_address;
-                            return label.length > 24 ? `${label.slice(0, 22)}...` : label;
+                          if (def && def.full_address) {
+                            const label = def.full_address;
+                            return label.length > 22 ? `${label.slice(0, 20)}...` : label;
                           }
                           const s = user?.shipping_address?.street || user?.shipping_address?.city;
-                          if (s && s !== "Dubai Marina" && !s.includes("Penthouse 4B")) {
-                            return s.length > 24 ? `${s.slice(0, 22)}...` : s;
+                          if (s && !s.includes("Dubai Marina") && !s.includes("Penthouse 4B") && !s.includes("42 Luxury Promenade")) {
+                            return s.length > 22 ? `${s.slice(0, 20)}...` : s;
                           }
                           return "Add Delivery Address";
                         })()}
